@@ -23,11 +23,17 @@ def set_counties():
     response = requests.get("https://api.census.gov/data/2023/acs/acs5?get=NAME&for=county:*")
     data = response.json()
     
+    if data is not None:
+        print('Clearing existing counties')
+        db.session.query(County).delete()
+        db.session.commit()
+    
     # Update the database with the counties and their IDs
     for i in range(1, len(data)):
         county_name = data[i][0]
         db.session.add(County(county_name=county_name))
     
+    print('Adding counties to the database')
     db.session.commit()
     return jsonify({"message": "Counties added to the database"})
 
