@@ -37,7 +37,7 @@ source venv/bin/activate  # On Windows: venv\Scriptsctivate
 Then, install the required packages:
 
 ```sh
-pip install flask flask-cors flask-sqlalchemy
+pip install -r requirements.txt
 ```
 
 #### 2.2 Run the Flask Server
