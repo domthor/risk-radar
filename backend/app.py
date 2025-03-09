@@ -14,35 +14,55 @@ db = SQLAlchemy(app)
 # County Model
 class County(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    state_initials = db.Column(db.String(2), nullable=False)
+    statefp = db.Column(db.String(2), nullable=False)
+    countyfp = db.Column(db.String(3), nullable=False)
+    countyns = db.Column(db.String(8), nullable=False)
     county_name = db.Column(db.String(100), nullable=False)
+    classfp = db.Column(db.String(2), nullable=False)
+    funcstat = db.Column(db.String(1), nullable=False)
     
-# Get all of the counties from the Census API
+    
+# Fetch county data from the Census Bureau's national file
 @app.route("/set_counties/", methods=["GET"])
 def set_counties():
-    # Make a request to the Census API for all of the counties
-    response = requests.get("https://api.census.gov/data/2023/acs/acs5?get=NAME&for=county:*")
-    data = response.json()
+    # URL to the national county file
+    url = "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt"
+    response = requests.get(url)
     
-    if data is not None:
-        print('Clearing existing counties')
-        db.session.query(County).delete()
-        db.session.commit()
+    data = response.text.splitlines()
+    data = data[1:]
     
-    # Update the database with the counties and their IDs
-    for i in range(1, len(data)):
-        county_name = data[i][0]
-        db.session.add(County(county_name=county_name))
+    # Process each line in the data
+    for line in data:
+        parts = line.split('|')
+        county = County(
+            state_initials=parts[0],
+            statefp=parts[1],
+            countyfp=parts[2],
+            countyns=parts[3],
+            county_name=parts[4],
+            classfp=parts[5],
+            funcstat=parts[6]
+        )
+        print("County", county)
+        db.session.add(county)
     
-    print('Adding counties to the database')
+    print("Adding counties to the database")
     db.session.commit()
     return jsonify({"message": "Counties added to the database"})
-
     
 # Get all the counties from the database
 @app.route("/counties/", methods=["GET"])
 def get_counties():
     counties = County.query.all()
-    return jsonify([county.county_name for county in counties])
+    results = []
+    for county in counties:
+        print(county.county_name)
+        county_name_and_state = f"{county.county_name}, {county.state_initials}"
+        results.append(county_name_and_state)
+    return jsonify(results)
+        
 
 if __name__ == "__main__":
     with app.app_context():
