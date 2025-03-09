@@ -42,12 +42,7 @@ def set_counties():
 @app.route("/counties/", methods=["GET"])
 def get_counties():
     counties = County.query.all()
-    return jsonify([
-        {
-            "county_name": county.county_name
-        }
-        for county in counties
-    ])
+    return jsonify([county.county_name for county in counties])
 
 if __name__ == "__main__":
     with app.app_context():

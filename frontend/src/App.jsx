@@ -3,9 +3,24 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Search from "./Components/Search";
 import About from "./Components/About";
 import Settings from "./Components/Settings";
+import Navbar from "./Components/Navbar";
+import Alerts from "./Components/Alerts";
 
 const App = () => {
-    const [counties, setCounties] = useState([]); // To store counties
+  const [counties, setCounties] = useState([]); // To store counties
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  // Apply dark mode on mount
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
 
   // Fetch counties when the component mounts
   useEffect(() => {
@@ -24,29 +39,18 @@ const App = () => {
   }, []);
   return (
     <Router>
-      <div>
-        {/* Add navigation links */}
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Search</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/settings">Settings</Link>
-            </li>
-          </ul>
-        </nav>
+      <Navbar />
 
-        {/* Define your routes */}
-        <Routes>
-          <Route path="/" element={<Search counties={counties} />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </div>
+      {/* Define your routes */}
+      <Routes>
+        <Route path="/" element={<Search counties={counties} />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/alerts" element={<Alerts />} />
+        <Route
+          path="/settings"
+          element={<Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
+        />
+      </Routes>
     </Router>
   );
 };

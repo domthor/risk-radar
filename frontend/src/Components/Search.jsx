@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Autocomplete, TextField } from "@mui/material";
+// import { Autocomplete, TextField } from "@mui/material";
+import Autocomplete from "./Autocomplete";
 
 const Search = ({ counties }) => {
   const [selectedCounty, setSelectedCounty] = useState(""); // To store selected county
@@ -10,29 +11,18 @@ const Search = ({ counties }) => {
   };
 
   return (
-      <div className="container">
-        <div className="">
-          <Autocomplete
-            value={selectedCounty}
-            onChange={handleSelect}
-            options={counties}
-            getOptionLabel={(option) => option.county_name || ""}
-            isOptionEqualToValue={(option, value) =>
-              option.county_name === value.county_name
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Search for a County"
-                variant="outlined"
-                fullWidth
-                className="p-2"
-              />
-            )}
-          />
-        </div>
-      </div>
-    );
+    <div className="h-screen flex flex-col items-center justify-center space-y-4 w-screen dark:bg-black dark:text-neutral-300 bg-light text-black p-8">
+      <h1 className="text-2xl font-semibold text-dark dark:text-light">
+        Select Your County
+      </h1>
+      <Autocomplete
+        options={counties}
+        value={selectedCounty}
+        onChange={handleSelect}
+      />
+      
+    </div>
+  );
 };
 
 export default Search;
