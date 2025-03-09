@@ -1,32 +1,47 @@
+import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import os
-
 app = Flask(__name__)
-CORS(app)
+CORS(app) 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-class Item(db.Model):
+# County Model
+class County(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-
-@app.route("/items", methods=["GET"])
-def get_items():
-    items = Item.query.all()
-    return jsonify([{"id": item.id, "name": item.name} for item in items])
-
-@app.route("/items", methods=["POST"])
-def add_item():
-    data = request.get_json()
-    new_item = Item(name=data["name"])
-    db.session.add(new_item)
+    county_name = db.Column(db.String(100), nullable=False)
+    
+# Get all of the counties from the Census API
+@app.route("/set_counties/", methods=["GET"])
+def set_counties():
+    # Make a request to the Census API for all of the counties
+    response = requests.get("https://api.census.gov/data/2023/acs/acs5?get=NAME&for=county:*")
+    data = response.json()
+    
+    # Update the database with the counties and their IDs
+    for i in range(1, len(data)):
+        county_name = data[i][0]
+        db.session.add(County(county_name=county_name))
+    
     db.session.commit()
-    return jsonify({"id": new_item.id, "name": new_item.name}), 201
+    return jsonify({"message": "Counties added to the database"})
+
+    
+# Get all the counties from the database
+@app.route("/counties/", methods=["GET"])
+def get_counties():
+    counties = County.query.all()
+    return jsonify([
+        {
+            "county_name": county.county_name
+        }
+        for county in counties
+    ])
 
 if __name__ == "__main__":
     with app.app_context():
