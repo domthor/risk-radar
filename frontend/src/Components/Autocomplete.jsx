@@ -73,7 +73,7 @@ const Autocomplete = ({ options }) => {
 
       {/* Suggestions List */}
       {isOpen && filteredOptions.length > 0 && (
-        <ul className="absolute left-0 right-0 mt-1 bg-light border border-dark rounded-md shadow-lg max-h-60 overflow-auto z-10 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+        <ul className="custom-scrollbar absolute left-0 right-0 mt-1 bg-light border border-dark rounded-md shadow-lg max-h-60 overflow-auto z-10 dark:bg-gray-800 dark:border-gray-600 dark:text-white">
           {filteredOptions.map((option, index) => (
             <li
               key={index}
