@@ -1,0 +1,26 @@
+
+FOR LOFI PROTOTYPE
+
+Figure out how to get relevant data from API calls
+Basic scorecard - show total num of fire, crime, etc related hazards in country from last 10 years or something
+
+
+FOR FINAL PROJECT
+
+Search/Scorecard Page
+- Finalize what info we want to display
+- Figure out scoring system
+- Write backend
+- Write frontend/UI
+- Combine front and back end
+
+Alerts Page
+- not sure
+
+About Page
+- add info
+
+Settings
+- Temperature units toggle
+- Distance units toggle
+- Email notfications toggle
