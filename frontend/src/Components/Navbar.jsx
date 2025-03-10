@@ -32,16 +32,7 @@ const Navbar = () => {
         </li>
         <li
           className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
-          data-tooltip-id="search"
-          data-tooltip-content="About"
-        >
-          <Link to="/about">
-            <FaCircleInfo className="text-3xl">About</FaCircleInfo>
-          </Link>
-        </li>
-        <li
-          className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
-          data-tooltip-id="search"
+          data-tooltip-id="alerts"
           data-tooltip-content="Alerts"
         >
           <Link to="/alerts">
@@ -50,7 +41,16 @@ const Navbar = () => {
         </li>
         <li
           className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
-          data-tooltip-id="search"
+          data-tooltip-id="about"
+          data-tooltip-content="About"
+        >
+          <Link to="/about">
+            <FaCircleInfo className="text-3xl">About</FaCircleInfo>
+          </Link>
+        </li>
+        <li
+          className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
+          data-tooltip-id="settings"
           data-tooltip-content="Settings"
         >
           <Link to="/settings">
