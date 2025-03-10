@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { BiSolidDownArrow } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
-const Autocomplete = ({ options }) => {
+const Autocomplete = ({ options, setSelectedCounty }) => {
+  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
   const [filteredOptions, setFilteredOptions] = useState();
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setFilteredOptions(options);
+  }, [options]);
 
   // Filter options based on the input value
   const handleInputChange = (e) => {
@@ -14,7 +20,7 @@ const Autocomplete = ({ options }) => {
     if (value) {
       setFilteredOptions(
         options.filter(
-          (option) => option.toLowerCase().includes(value.toLowerCase()) // Access county_name property
+          (option) => option.countyName.toLowerCase().includes(value.toLowerCase()) // Access county_name property
         )
       );
     } else {
@@ -26,8 +32,10 @@ const Autocomplete = ({ options }) => {
 
   // Handle option selection
   const handleOptionSelect = (option) => {
-    setInputValue(option);
+    setInputValue(option.countyName);
+    setSelectedCounty(option);
     setIsOpen(false);
+    navigate("/score/");
   };
 
   // Handle clear input value
@@ -38,7 +46,6 @@ const Autocomplete = ({ options }) => {
   };
 
   const handleDropdown = () => {
-    console.log("filter options", filteredOptions);
     setIsOpen(!isOpen); // Toggle dropdown
   };
 
@@ -80,7 +87,7 @@ const Autocomplete = ({ options }) => {
               onClick={() => handleOptionSelect(option)}
               className="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
             >
-              {option}
+              {option.countyName}
             </li>
           ))}
         </ul>

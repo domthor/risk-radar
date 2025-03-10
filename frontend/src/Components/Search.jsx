@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 // import { Autocomplete, TextField } from "@mui/material";
 import Autocomplete from "./Autocomplete";
 
-const Search = ({ counties }) => {
-  const [selectedCounty, setSelectedCounty] = useState(""); // To store selected county
+const Search = ({ counties, selectedCounty, setSelectedCounty }) => {
 
   // Handle county selection
   const handleSelect = (event, value) => {
@@ -19,6 +18,8 @@ const Search = ({ counties }) => {
         options={counties}
         value={selectedCounty}
         onChange={handleSelect}
+        selectedCounty={selectedCounty}
+        setSelectedCounty={setSelectedCounty}
       />
       
     </div>

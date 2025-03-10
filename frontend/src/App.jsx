@@ -5,12 +5,15 @@ import About from "./Components/About";
 import Settings from "./Components/Settings";
 import Navbar from "./Components/Navbar";
 import Alerts from "./Components/Alerts";
+import Score from "./Components/Score";
 
 const App = () => {
   const [counties, setCounties] = useState([]); // To store counties
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
   );
+
+  const [selectedCounty, setSelectedCounty] = useState(""); // To store selected county
 
   // Apply dark mode on mount
   useEffect(() => {
@@ -37,19 +40,21 @@ const App = () => {
     };
     fetchCounties();
   }, []);
+
   return (
     <Router>
       <Navbar />
 
       {/* Define your routes */}
       <Routes>
-        <Route path="/" element={<Search counties={counties} />} />
+        <Route path="/" element={<Search counties={counties} selectedCounty={selectedCounty} setSelectedCounty={setSelectedCounty}/>} />
         <Route path="/about" element={<About />} />
         <Route path="/alerts" element={<Alerts />} />
         <Route
           path="/settings"
           element={<Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
         />
+        <Route path="/score" element={<Score selectedCounty={selectedCounty}/>} />
       </Routes>
     </Router>
   );
