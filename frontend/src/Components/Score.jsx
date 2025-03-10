@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
 
 const Score = ({ selectedCounty }) => {
   const [disasterSummaries, setDisasterSummaries] = useState([]);
   const [hazardCounts, setHazardCounts] = useState({});
   const [oldestDate, setOldestDate] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchScore = async () => {
       try {
+        if (!selectedCounty) {
+          navigate("/");
+          return;
+        }
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/disaster_summaries/?fipsStateCode=${
             selectedCounty.fipsStateCode
