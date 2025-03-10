@@ -32,6 +32,10 @@ def set_counties():
     
     data = response.text.splitlines()
     data = data[1:]
+    if data is not None:
+        print("Clearing duplicate county data.")
+        db.session.query(County).delete()
+        db.session.commit()
     
     # Process each line in the data
     for line in data:
