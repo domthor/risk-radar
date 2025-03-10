@@ -13,9 +13,10 @@ const Settings = ({ darkMode, setDarkMode }) => {
   };
 
   return (
+    <div className="min-h-screen w-full flex flex-col dark:bg-black dark:text-neutral-300 bg-light text-black pt-40">
     <div className="min-h-screen w-full flex flex-col dark:bg-black dark:text-neutral-300 bg-light text-black pt-30">
       {/* Main content */}
-      <div className="flex-1 px-8 pt-12">
+      <div className="flex-1 px-8">
         {/* Centered Page Title with extra spacing */}
         <h1 className="text-2xl font-bold mb-8 text-center">
           Settings
