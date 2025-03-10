@@ -13,7 +13,6 @@ const Settings = ({ darkMode, setDarkMode }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col dark:bg-black dark:text-neutral-300 bg-light text-black pt-40">
     <div className="min-h-screen w-full flex flex-col dark:bg-black dark:text-neutral-300 bg-light text-black pt-30">
       {/* Main content */}
       <div className="flex-1 px-8">
