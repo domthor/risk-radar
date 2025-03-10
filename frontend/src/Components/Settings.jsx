@@ -13,26 +13,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col dark:bg-black dark:text-neutral-300 bg-light text-black">
-      {/* Navbar */}
-      <nav className="bg-gray-100 dark:bg-gray-800 h-16 flex items-center justify-between px-8">
-        <div className="text-xl font-bold">RiskRadar</div>
-        <div className="space-x-6">
-          <Link to="/live-map" className="hover:underline">
-            Live Map
-          </Link>
-          <Link to="/search" className="hover:underline">
-            Search
-          </Link>
-          <Link to="/alerts" className="hover:underline">
-            Alerts
-          </Link>
-          <Link to="/settings" className="hover:underline">
-            Settings
-          </Link>
-        </div>
-      </nav>
-
+    <div className="min-h-screen w-full flex flex-col dark:bg-black dark:text-neutral-300 bg-light text-black pt-30">
       {/* Main content */}
       <div className="flex-1 px-8 pt-12">
         {/* Centered Page Title with extra spacing */}
