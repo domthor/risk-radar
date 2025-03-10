@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
 
 const Settings = ({ darkMode, setDarkMode }) => {
-  // Existing fetch function
   const fetchAndSetCounties = async () => {
     try {
       await fetch(`${import.meta.env.VITE_API_URL}/set_counties/`);
@@ -35,9 +34,11 @@ const Settings = ({ darkMode, setDarkMode }) => {
       </nav>
 
       {/* Main content */}
-      <div className="flex-1 p-8">
-        {/* Page Title */}
-        <h1 className="text-2xl font-bold mb-4">Settings</h1>
+      <div className="flex-1 px-8 pt-12">
+        {/* Centered Page Title with extra spacing */}
+        <h1 className="text-2xl font-bold mb-8 text-center">
+          Settings
+        </h1>
 
         {/* Settings Card */}
         <div className="bg-pink-50 dark:bg-gray-700 rounded-md p-4 w-full max-w-xl mx-auto space-y-4">
