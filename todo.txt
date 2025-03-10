@@ -15,10 +15,11 @@ Search/Scorecard Page
 - Combine front and back end
 
 Alerts Page
-- not sure
+- Display current data based on the user's "Home county" this can be set with session variables and later on
+we might try to add user authentication to allow the home county to persist between sessions.
 
 About Page
-- add info
+- Added information about the app including who might use it, potential use cases, etc. ✅
 
 Settings
 - Temperature units toggle
