@@ -1,38 +1,89 @@
-import React from 'react'
-import { Button } from "@mui/material";
-import Switch from "@mui/material/Switch";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Switch from '@mui/material/Switch';
 
 const Settings = ({ darkMode, setDarkMode }) => {
-
-    const fetchAndSetCounties = async () => {
-        try {
-            await fetch(`${import.meta.env.VITE_API_URL}/set_counties/`);
-            alert("Counties have been set!");
-        } catch (error) {
-            console.error("There was an error fetching the counties!", error);
-        }
+  // Existing fetch function
+  const fetchAndSetCounties = async () => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/set_counties/`);
+      alert("Counties have been set!");
+    } catch (error) {
+      console.error("There was an error fetching the counties!", error);
     }
+  };
 
   return (
-    <div className="h-screen w-screen dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-row">
-      <div className="w-1/3"></div>
-      <div className="w-1/3 flex flex-col items-start justify-start pt-30 space-y-8">
-        <h1 className="text-4xl">Settings</h1>
-        <button
-          onClick={fetchAndSetCounties}
-          className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-        >
-          Set Counties
-        </button>
-        <div className="flex flex-row w-full justify-between items-center border">
-          <span className="p-4 items-start">
-            Dark Mode
-          </span>
-          <div className="items-end"><Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} /></div>
+    <div className="min-h-screen w-full flex flex-col dark:bg-black dark:text-neutral-300 bg-light text-black">
+      {/* Navbar */}
+      <nav className="bg-gray-100 dark:bg-gray-800 h-16 flex items-center justify-between px-8">
+        <div className="text-xl font-bold">RiskRadar</div>
+        <div className="space-x-6">
+          <Link to="/live-map" className="hover:underline">
+            Live Map
+          </Link>
+          <Link to="/search" className="hover:underline">
+            Search
+          </Link>
+          <Link to="/alerts" className="hover:underline">
+            Alerts
+          </Link>
+          <Link to="/settings" className="hover:underline">
+            Settings
+          </Link>
+        </div>
+      </nav>
+
+      {/* Main content */}
+      <div className="flex-1 p-8">
+        {/* Page Title */}
+        <h1 className="text-2xl font-bold mb-4">Settings</h1>
+
+        {/* Settings Card */}
+        <div className="bg-pink-50 dark:bg-gray-700 rounded-md p-4 w-full max-w-xl mx-auto space-y-4">
+          {/* 1. Dark Mode */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-600">
+            <span className="text-sm font-medium">Dark Mode</span>
+            <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
+          </div>
+
+          {/* 2. Temperature Units (°C) */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-600">
+            <span className="text-sm font-medium">Temperature Units (°C)</span>
+            <Switch />
+          </div>
+
+          {/* 3. Distance Units (Imperial) */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-600">
+            <span className="text-sm font-medium">Distance Units (Imperial)</span>
+            <Switch />
+          </div>
+
+          {/* 4. Reduced Motion */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-600">
+            <span className="text-sm font-medium">Reduced Motion</span>
+            <Switch />
+          </div>
+
+          {/* 5. Receive Email Notifications */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-600">
+            <span className="text-sm font-medium">Receive Email Notifications</span>
+            <Switch />
+          </div>
+
+          {/* Set Counties Button */}
+          <div className="pt-4 flex justify-end">
+            <button
+              onClick={fetchAndSetCounties}
+              className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Set Counties
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Settings
+export default Settings;
