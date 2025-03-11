@@ -47,14 +47,28 @@ const App = () => {
 
       {/* Define your routes */}
       <Routes>
-        <Route path="/" element={<Search counties={counties} selectedCounty={selectedCounty} setSelectedCounty={setSelectedCounty}/>} />
+        <Route
+          path="/"
+          element={
+            <Search
+              counties={counties}
+              selectedCounty={selectedCounty}
+              setSelectedCounty={setSelectedCounty}
+            />
+          }
+        />
         <Route path="/about" element={<About />} />
         <Route path="/alerts" element={<Alerts />} />
         <Route
           path="/settings"
           element={<Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
         />
-        <Route path="/score" element={<Score selectedCounty={selectedCounty}/>} />
+        <Route
+          path="/score"
+          element={
+            <Score selectedCounty={selectedCounty} darkMode={darkMode} />
+          }
+        />
       </Routes>
     </Router>
   );

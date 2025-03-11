@@ -3,7 +3,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { PieChart } from "@mui/x-charts/PieChart"; // Import the PieChart component
 
-const Score = ({ selectedCounty }) => {
+const Score = ({ selectedCounty, darkMode }) => {
   const [disasterSummaries, setDisasterSummaries] = useState([]);
   const [hazardCounts, setHazardCounts] = useState({});
   const [oldestDate, setOldestDate] = useState(null);
@@ -52,7 +52,7 @@ const Score = ({ selectedCounty }) => {
       }
     };
     fetchScore();
-  }, [selectedCounty]);
+  }, [selectedCounty, navigate]);
 
   // Prepare data for PieChart
   const pieChartData = Object.entries(hazardCounts).map(([type, count], index) => ({
@@ -64,15 +64,25 @@ const Score = ({ selectedCounty }) => {
   return (
     <div className="dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-col items-center pt-32">
       {loading ? (
-        <div className="w-screen h-screen flex justify-center"><CircularProgress /></div>
+        <div className="w-screen h-screen flex justify-center">
+          <CircularProgress />
+        </div>
       ) : (
         <>
           <h1 className="text-4xl mb-6">Score Page</h1>
-          <div className="text-lg mb-2">County Name: {selectedCounty.countyName}</div>
-          <div className="text-lg mb-2">State Code: {selectedCounty.fipsStateCode}</div>
-          <div className="text-lg mb-6">County Code: {selectedCounty.fipsCountyCode}</div>
+          <div className="text-lg mb-2">
+            County Name: {selectedCounty.countyName}
+          </div>
+          <div className="text-lg mb-2">
+            State Code: {selectedCounty.fipsStateCode}
+          </div>
+          <div className="text-lg mb-6">
+            County Code: {selectedCounty.fipsCountyCode}
+          </div>
 
-          <h2 className="text-2xl mb-4 mt-8">Hazard Summary since {oldestDate || "unknown"}</h2>
+          <h2 className="text-2xl mb-4 mt-8">
+            Hazard Summary since {oldestDate || "unknown"}
+          </h2>
           <ul>
             {Object.entries(hazardCounts).map(([type, count]) => (
               <li key={type}>
@@ -87,20 +97,34 @@ const Score = ({ selectedCounty }) => {
               series={[
                 {
                   data: pieChartData,
-                  highlightScope: { fade: 'global', highlight: 'item' }, // Highlight on hover
-                  faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' }, // Fade others
+                  highlightScope: { fade: "global", highlight: "item" }, // Highlight on hover
+                  faded: {
+                    innerRadius: 30,
+                    additionalRadius: -30,
+                    color: "gray",
+                  }, // Fade others
                 },
               ]}
               height={300}
               width={700}
               valueFormatter={(value) => `${value}`}
+              slotProps={{
+                legend: {
+                  labelStyle: {
+                    fill: darkMode ? "#d4d4d4" : "#171717",
+                  },
+                },
+              }}
             />
           </div>
 
           <h2 className="text-2xl mt-8">Disaster Details</h2>
           <div className="flex flex-col items-center w-full mt-4">
             {disasterSummaries.map((disasterSummary) => (
-              <div key={disasterSummary.id} className="border p-2 my-2 w-2/5 text-center rounded-lg shadow-md text-sm">
+              <div
+                key={disasterSummary.id}
+                className="border p-2 my-2 w-2/5 text-center rounded-lg shadow-md text-sm"
+              >
                 <div>Declaration Date: {disasterSummary.declarationDate}</div>
                 <div>Title: {disasterSummary.declarationTitle}</div>
                 <div>Incident Type: {disasterSummary.incidentType}</div>
