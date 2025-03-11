@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
+import { PieChart } from "@mui/x-charts/PieChart"; // Import the PieChart component
 
 const Score = ({ selectedCounty }) => {
   const [disasterSummaries, setDisasterSummaries] = useState([]);
@@ -53,6 +54,13 @@ const Score = ({ selectedCounty }) => {
     fetchScore();
   }, [selectedCounty]);
 
+  // Prepare data for PieChart
+  const pieChartData = Object.entries(hazardCounts).map(([type, count], index) => ({
+    id: index,
+    value: count,
+    label: type,
+  }));
+
   return (
     <div className="dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-col items-center pt-32">
       {loading ? (
@@ -64,7 +72,7 @@ const Score = ({ selectedCounty }) => {
           <div className="text-lg mb-2">State Code: {selectedCounty.fipsStateCode}</div>
           <div className="text-lg mb-6">County Code: {selectedCounty.fipsCountyCode}</div>
 
-          <h2 className="text-2xl mt-8">Hazard Summary since {oldestDate || "unknown"}</h2>
+          <h2 className="text-2xl mb-4 mt-8">Hazard Summary since {oldestDate || "unknown"}</h2>
           <ul>
             {Object.entries(hazardCounts).map(([type, count]) => (
               <li key={type}>
@@ -72,6 +80,22 @@ const Score = ({ selectedCounty }) => {
               </li>
             ))}
           </ul>
+
+          <h2 className="text-2xl mb-4 mt-8">Incident Type Distribution</h2>
+          <div className="cursor-pointer">
+            <PieChart
+              series={[
+                {
+                  data: pieChartData,
+                  highlightScope: { fade: 'global', highlight: 'item' }, // Highlight on hover
+                  faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' }, // Fade others
+                },
+              ]}
+              height={300}
+              width={700}
+              valueFormatter={(value) => `${value}`}
+            />
+          </div>
 
           <h2 className="text-2xl mt-8">Disaster Details</h2>
           <div className="flex flex-col items-center w-full mt-4">
