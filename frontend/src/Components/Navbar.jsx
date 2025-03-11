@@ -9,7 +9,7 @@ import "react-tooltip/dist/react-tooltip.css";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 w-full bg-light dark:bg-black py-6 px-8 shadow-lg z-50 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 w-full bg-light dark:bg-black py-6 px-8 shadow-lg shadow-dark dark:shadow-light   z-50 flex items-center justify-between">
       <div className="pl-8 flex items-center">
         <a
           href="/"
