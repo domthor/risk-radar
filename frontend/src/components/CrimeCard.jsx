@@ -79,7 +79,7 @@ export const CrimeCard = ({ selectedCounty, darkMode, title }) => {
 
   return (
     <div className="bg-white dark:bg-dark rounded-md p-4 mt-8 w-1/3 h-auto flex flex-col items-center">
-      <h2 className="text-2xl mb-4">
+      <h2 className="text-2xl mb-4 font-semibold">
         State Crime Type Distribution
       </h2>
       <div
