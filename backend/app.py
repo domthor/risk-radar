@@ -2,7 +2,7 @@ import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-import os
+import time
 app = Flask(__name__)
 CORS(app) 
 
@@ -63,6 +63,8 @@ def get_counties():
             "fipsStateCode": county.statefp,
             "fipsCountyCode": county.countyfp,
         })
+
+    # time.sleep(3)
     return jsonify(results)
 
 # Get score for a county

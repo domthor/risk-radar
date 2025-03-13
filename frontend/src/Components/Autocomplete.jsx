@@ -54,7 +54,7 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
   }, [options]);
 
   return (
-    <div className="relative w-1/5">
+    <>
       <div className="flex items-center">
         {/* Input Field */}
         <input
@@ -99,7 +99,7 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
           No options found
         </div>
       )}
-    </div>
+    </>
   );
 };
 

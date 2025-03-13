@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Search from "./Components/Search";
-import About from "./Components/About";
-import Settings from "./Components/Settings";
-import Navbar from "./Components/Navbar";
-import Alerts from "./Components/Alerts";
-import Score from "./Components/Score";
+import React, { useState, useEffect, Suspense } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Search from "./pages/Search";
+import About from "./pages/About";
+import Settings from "./pages/Settings";
+import Navbar from "./components/Navbar";
+import Alerts from "./pages/Alerts";
+import Score from "./pages/Score";
+import SearchSkeleton from "./components/loading/SearchSkeleton";
 
 const App = () => {
-  const [counties, setCounties] = useState([]); // To store counties
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
   );
-
-  const [selectedCounty, setSelectedCounty] = useState(""); // To store selected county
 
   // Apply dark mode on mount
   useEffect(() => {
@@ -25,21 +23,7 @@ const App = () => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
-  // Fetch counties when the component mounts
-  useEffect(() => {
-    const fetchCounties = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/counties/`
-        ); // Using fetch with relative path
-        const data = await response.json(); // Parse the JSON response
-        setCounties(data); // Set the counties data to state
-      } catch (error) {
-        console.error("There was an error fetching the counties!", error);
-      }
-    };
-    fetchCounties();
-  }, []);
+  const [selectedCounty, setSelectedCounty] = useState(null);
 
   return (
     <Router>
@@ -50,11 +34,12 @@ const App = () => {
         <Route
           path="/"
           element={
-            <Search
-              counties={counties}
-              selectedCounty={selectedCounty}
-              setSelectedCounty={setSelectedCounty}
-            />
+            <Suspense fallback={<SearchSkeleton />}>
+              <Search
+                selectedCounty={selectedCounty}
+                setSelectedCounty={setSelectedCounty}
+              />
+            </Suspense>
           }
         />
         <Route path="/about" element={<About />} />
