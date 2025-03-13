@@ -21,7 +21,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
         </h1>
 
         {/* Settings Card */}
-        <div className="bg-pink-50 dark:bg-gray-700 rounded-md p-4 w-full max-w-xl mx-auto space-y-4">
+        <div className="bg-blue-50 dark:bg-gray-700 rounded-md p-4 w-full max-w-xl mx-auto space-y-4">
           {/* 1. Dark Mode */}
           <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-600">
             <span className="text-sm font-medium">Dark Mode</span>
