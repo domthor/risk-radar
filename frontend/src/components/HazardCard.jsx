@@ -78,7 +78,7 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
   ];
 
   return (
-    <div className="bg-white dark:bg-dark rounded-md p-4 mt-8 w-1/3 h-auto flex flex-col items-center">
+    <div className="bg-white dark:bg-dark rounded-md p-4 w-1/3 h-auto flex flex-col items-center">
       <h2 className="text-2xl mb-4 font-semibold">
         County Hazard Type Distribution ({oldestDate || "unknown"} - Present)
       </h2>

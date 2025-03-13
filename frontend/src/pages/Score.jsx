@@ -16,7 +16,7 @@ const Score = ({ selectedCounty, darkMode }) => {
   if (!selectedCounty) return null; // Prevent rendering if already redirecting
 
   return (
-    <div className="dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-col items-center pt-32 min-h-screen">
+    <div className="dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-col items-center pt-32 min-h-screen space-y-4">
       <h1 className="text-4xl mt-12 font-bold">Score Page</h1>
 
       <div className="flex flex-row w-full items-center justify-center space-x-4">
