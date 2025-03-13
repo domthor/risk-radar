@@ -17,16 +17,7 @@ const Score = ({ selectedCounty, darkMode }) => {
 
   return (
     <div className="dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-col items-center pt-32 min-h-screen">
-      <h1 className="text-4xl mb-6">Score Page</h1>
-      <div className="text-lg mb-2">
-        County Name: {selectedCounty.countyName}
-      </div>
-      <div className="text-lg mb-2">
-        State Code: {selectedCounty.fipsStateCode}
-      </div>
-      <div className="text-lg mb-6">
-        County Code: {selectedCounty.fipsCountyCode}
-      </div>
+      <h1 className="text-4xl mb-6 font-bold">Score Page</h1>
 
       <div className="flex flex-row w-full items-center justify-center space-x-4">
         <Suspense fallback={<HazardCardSkeleton />}>
