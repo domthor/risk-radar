@@ -84,6 +84,8 @@ def get_disaster_summaries():
     
     # Make request to FEMA API
     response = requests.get(f"{FEMA_API_URL}?{filter_query}")
+
+    # time.sleep(3)
     
     # Check if request was successful
     if response.status_code != 200:

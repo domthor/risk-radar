@@ -1,14 +1,15 @@
-import React from 'react'
+export const HazardCardSkeleton = () => {
 
-const HazardCardSkeleton = () => {
   return (
-    <>
-      <div className="bg-gray-300 w-1/4 rounded-md animate-pulse text-transparent text-2xl mb-4 mt-8">
-        Incident Type Distribution since 1975
+    <div className="min-w-screen min-h-screen flex flex-col items-center">
+      <div className="bg-gray-800 rounded-md animate-pulse text-transparent text-2xl m-4 mt-8">
+        Incident Type Distribution since XXXX
       </div>
-      <div className="cursor-pointer"></div>
-    </>
+      <div
+        className="w-4/5 lg:w-3/5 h-96 bg-gray-800 rounded-xl animate-pulse"
+      ></div>
+    </div>
   );
-}
+};
 
-export default HazardCardSkeleton
+export default HazardCardSkeleton;

@@ -74,7 +74,7 @@ export const HazardCard = ({ selectedCounty, darkMode }) => {
         {summaries.map((disasterSummary) => (
           <div
             key={disasterSummary.id}
-            className="border p-2 my-2 lg:w-2/5 text-center rounded-lg shadow-md text-sm"
+            className="border p-2 my-2 lg:w-2/5 text-start rounded-lg shadow-md text-sm"
           >
             <div>Declaration Date: {disasterSummary.declarationDate}</div>
             <div>Title: {disasterSummary.declarationTitle}</div>
