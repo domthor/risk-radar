@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
 const Autocomplete = ({ options, setSelectedCounty }) => {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
   const [filteredOptions, setFilteredOptions] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1); // Track highlighted index
 
   useEffect(() => {
     setFilteredOptions(options);
   }, [options]);
+
+  // Auto-focus input field when the component mounts
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   // Filter options based on the input value
   const handleInputChange = (e) => {
@@ -19,15 +26,17 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
     setInputValue(value);
     if (value) {
       setFilteredOptions(
-        options.filter(
-          (option) => option.countyName.toLowerCase().includes(value.toLowerCase()) // Access county_name property
+        options.filter((option) =>
+          option.countyName.toLowerCase().includes(value.toLowerCase())
         )
       );
+      setIsOpen(true);
+      setHighlightedIndex(0); // Reset highlight to first option
     } else {
       setFilteredOptions(options);
+      setIsOpen(false);
+      setHighlightedIndex(-1);
     }
-
-    setIsOpen(value.length > 0);
   };
 
   // Handle option selection
@@ -43,10 +52,25 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
     setInputValue(""); // Clear input value
     setFilteredOptions(options); // Reset filtered options
     setIsOpen(false); // Close dropdown
+    setHighlightedIndex(-1); // Reset highlighted index
   };
 
   const handleDropdown = () => {
     setIsOpen(!isOpen); // Toggle dropdown
+  };
+
+  const handleKeyDown = (e) => {
+    if (!isOpen || filteredOptions.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      setHighlightedIndex((prev) =>
+        prev < filteredOptions.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === "ArrowUp") {
+      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    } else if (e.key === "Enter" && highlightedIndex >= 0) {
+      handleOptionSelect(filteredOptions[highlightedIndex]);
+    }
   };
 
   useEffect(() => {
@@ -58,9 +82,11 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
       <div className="flex items-center">
         {/* Input Field */}
         <input
+          ref={inputRef}
           type="text"
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           placeholder="Type to search..."
           className="w-full p-2 pr-10 border border-dark rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600"
         />
@@ -85,7 +111,9 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
             <li
               key={index}
               onClick={() => handleOptionSelect(option)}
-              className="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+              className={`p-2 cursor-pointer ${
+                highlightedIndex === index ? "bg-gray-200 dark:bg-gray-600" : ""
+              }`}
             >
               {option.countyName}
             </li>
