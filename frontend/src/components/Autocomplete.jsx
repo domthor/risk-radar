@@ -88,7 +88,7 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder="Type to search..."
-          className="w-full p-2 pr-10 border border-dark rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600"
+          className="w-full p-2 pr-10 border border-dark rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600"
         />
 
         {/* Clear Button */}
