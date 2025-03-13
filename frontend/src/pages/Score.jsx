@@ -27,6 +27,14 @@ const Score = ({ selectedCounty, darkMode }) => {
           <CrimeCard selectedCounty={selectedCounty} darkMode={darkMode} />
         </Suspense>
       </div>
+      <div className="flex flex-row w-full items-center justify-center space-x-4">
+        <Suspense fallback={<HazardCardSkeleton />}>
+          <HazardCard selectedCounty={selectedCounty} darkMode={darkMode} />
+        </Suspense>
+        <Suspense fallback={<HazardCardSkeleton />}>
+          <CrimeCard selectedCounty={selectedCounty} darkMode={darkMode} />
+        </Suspense>
+      </div>
     </div>
   );
 };
