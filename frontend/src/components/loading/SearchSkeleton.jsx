@@ -8,7 +8,7 @@ const SearchSkeleton = () => {
       </h1>
 
       <div className="relative w-1/5">
-        <div className="bg-gray-800 h-10 w-full rounded-md animate-pulse"></div>
+        <div className="bg-gray-800 h-10.5 w-full rounded-md animate-pulse"></div>
       </div>
     </div>
   );
