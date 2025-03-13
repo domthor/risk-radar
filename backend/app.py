@@ -59,6 +59,7 @@ def get_counties():
     results = []
     for county in counties:
         results.append({
+            "stateInitials": county.state_initials,
             "countyName": f"{county.county_name}, {county.state_initials}",
             "fipsStateCode": county.statefp,
             "fipsCountyCode": county.countyfp,

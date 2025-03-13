@@ -3,7 +3,7 @@ import { PieChart } from "@mui/x-charts/PieChart"; // Import the PieChart compon
 import { useHazardData } from "../hooks/useHazardData";
 import { useDrawingArea } from "@mui/x-charts/hooks";
 
-export const HazardCard = ({ selectedCounty, darkMode, title }) => {
+export const CrimeCard = ({ selectedCounty, darkMode, title }) => {
   const { data } = useHazardData(selectedCounty);
   const { summaries, hazardCounts, oldestDate } = data;
 
@@ -80,7 +80,7 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
   return (
     <div className="bg-white dark:bg-dark rounded-md p-4 mt-8 w-1/3 h-auto flex flex-col items-center">
       <h2 className="text-2xl mb-4">
-        County Hazard Type Distribution ({oldestDate || "unknown"} - Present)
+        State Crime Type Distribution
       </h2>
       <div
         ref={chartWrapper}
@@ -90,10 +90,12 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
         <PieChart
           series={[
             {
-              data: pieChartData.sort((a, b) => b.value - a.value).map((item, index) => ({
-                ...item,
-                color: customColors[index % customColors.length], // Assign custom colors cyclically
-              })),
+              data: pieChartData
+                .sort((a, b) => b.value - a.value)
+                .map((item, index) => ({
+                  ...item,
+                  color: customColors[index % customColors.length], // Assign custom colors cyclically
+                })),
               innerRadius:
                 Math.min(chartDimensions.width, chartDimensions.height) * 0.36, // 25% of the smallest dimension
               outerRadius:
@@ -110,24 +112,9 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
             },
           }}
         >
-          <PieCenterLabel>{selectedCounty.countyName}</PieCenterLabel>
+          <PieCenterLabel>{selectedCounty.stateInitials}</PieCenterLabel>
         </PieChart>
       </div>
-
-      {/* <h2 className="text-2xl mt-8">Disaster Details</h2>
-      <div className="flex flex-col items-center w-full mt-4">
-        {summaries.map((disasterSummary) => (
-          <div
-            key={disasterSummary.id}
-            className="border p-2 my-2 lg:w-2/5 text-start rounded-lg shadow-md text-sm"
-          >
-            <div>Declaration Date: {disasterSummary.declarationDate}</div>
-            <div>Title: {disasterSummary.declarationTitle}</div>
-            <div>Incident Type: {disasterSummary.incidentType}</div>
-            <div>Designated Area: {disasterSummary.designatedArea}</div>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 };

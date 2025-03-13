@@ -1,5 +1,6 @@
 import React, { useEffect, Suspense } from "react";
 import { HazardCard } from "../components/HazardCard";
+import { CrimeCard } from "../components/CrimeCard";
 import { useNavigate } from "react-router-dom";
 import HazardCardSkeleton from "../components/loading/HazardCardSkeleton";
 
@@ -27,9 +28,14 @@ const Score = ({ selectedCounty, darkMode }) => {
         County Code: {selectedCounty.fipsCountyCode}
       </div>
 
-      <Suspense fallback={<HazardCardSkeleton />}>
-        <HazardCard selectedCounty={selectedCounty} darkMode={darkMode} />
-      </Suspense>
+      <div className="flex flex-row w-full items-center justify-center space-x-4">
+        <Suspense fallback={<HazardCardSkeleton />}>
+          <HazardCard selectedCounty={selectedCounty} darkMode={darkMode} />
+        </Suspense>
+        <Suspense fallback={<HazardCardSkeleton />}>
+          <CrimeCard selectedCounty={selectedCounty} darkMode={darkMode} />
+        </Suspense>
+      </div>
     </div>
   );
 };

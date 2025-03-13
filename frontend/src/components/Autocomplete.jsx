@@ -73,6 +73,11 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
     }
   };
 
+  // Handle mouse hover to change highlighted index
+  const handleMouseEnter = (index) => {
+    setHighlightedIndex(index);
+  };
+
   useEffect(() => {
     setFilteredOptions(options);
   }, [options]);
@@ -88,7 +93,7 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder="Type to search..."
-          className="w-full p-2 pr-10 border border-dark rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600"
+          className="w-full p-2 pr-10 border border-dark rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-dark dark:text-white dark:border-gray-600"
         />
 
         {/* Clear Button */}
@@ -111,6 +116,7 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
             <li
               key={index}
               onClick={() => handleOptionSelect(option)}
+              onMouseEnter={() => handleMouseEnter(index)} // Handle hover
               className={`p-2 cursor-pointer ${
                 highlightedIndex === index ? "bg-gray-200 dark:bg-gray-600" : ""
               }`}
