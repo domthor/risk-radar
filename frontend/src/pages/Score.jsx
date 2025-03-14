@@ -6,14 +6,18 @@ import { useNavigate } from "react-router-dom";
 const Score = ({ selectedCounty, darkMode }) => {
   const navigate = useNavigate();
   const [countyDisasterRoute, setCountyDisasterRoute] = useState(null);
+  const [stateDisasterRoute, setStateDisasterRoute] = useState(null);
+  const [nationalDisasterRoute, setNationalDisasterRoute] = useState(null);
 
   useEffect(() => {
     if (!selectedCounty) {
       navigate("/");
     }
     else {
-      const hazard_route = `/api/disaster_summaries/?fipsStateCode=${selectedCounty.fipsStateCode}&fipsCountyCode=${selectedCounty.fipsCountyCode}`;
-      setCountyDisasterRoute(hazard_route);
+      const base_hazard_route = `/api/disaster_summaries/`;
+      setCountyDisasterRoute(`${base_hazard_route}?fipsStateCode=${selectedCounty.fipsStateCode}&fipsCountyCode=${selectedCounty.fipsCountyCode}`);
+      setStateDisasterRoute(`${base_hazard_route}?fipsStateCode=${selectedCounty.fipsStateCode}`);
+      setNationalDisasterRoute(`${base_hazard_route}`);
     }
   }, [selectedCounty, navigate]);
 
@@ -22,13 +26,32 @@ const Score = ({ selectedCounty, darkMode }) => {
 
   return (
     <div className="dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-col items-center pt-32 min-h-screen space-y-4">
-      <h1 className="text-4xl mt-12 font-bold">Score Page</h1>
+      <h1 className="text-4xl mt-12 font-bold">{selectedCounty.countyName}</h1>
 
-      <div className="flex flex-row w-full items-center justify-center space-x-4">
-        { countyDisasterRoute && (
+      <h2 className="text-2xl">Disaster Summaries</h2>
+      <div className="flex flex-row w-full justify-center space-x-4">
+        {countyDisasterRoute && (
           <Suspense fallback={<PieCardSkeleton />}>
             <PieCard
               route={countyDisasterRoute}
+              darkMode={darkMode}
+              selectedCounty={selectedCounty}
+            />
+          </Suspense>
+        )}
+        {stateDisasterRoute && (
+          <Suspense fallback={<PieCardSkeleton />}>
+            <PieCard
+              route={stateDisasterRoute}
+              darkMode={darkMode}
+              selectedCounty={selectedCounty}
+            />
+          </Suspense>
+        )}
+        {nationalDisasterRoute && (
+          <Suspense fallback={<PieCardSkeleton />}>
+            <PieCard
+              route={nationalDisasterRoute}
               darkMode={darkMode}
               selectedCounty={selectedCounty}
             />
