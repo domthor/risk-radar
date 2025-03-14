@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import time
+import threading
 app = Flask(__name__)
 CORS(app) 
 
@@ -15,6 +16,7 @@ db = SQLAlchemy(app)
 FEMA_API_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries"
 CENSUS_API_URL = "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt"
 BATCH_SIZE = 10000  # Max records per request
+MAX_THREADS = 10  # Tune based on API rate limits and system capacity
 
 # County Model
 class County(db.Model):
@@ -69,6 +71,66 @@ def get_counties():
 
     return jsonify(results)
 
+def fetch_data(skip, filter_query, results, index):
+    """Fetches a batch of disaster summaries from the FEMA API and stores it in results."""
+    url = f"{FEMA_API_URL}?$top={BATCH_SIZE}&$skip={skip}&$inlinecount=allpages"
+    if filter_query:
+        url += f"&{filter_query}"
+
+    print(f"Fetching {url}...")
+    response = requests.get(url)
+    response.raise_for_status()
+    data = response.json()
+
+    results[index] = data.get("DisasterDeclarationsSummaries", [])
+    print(f"Fetched {len(results[index])} records from skip={skip}")
+
+def get_total_records(filter_query=None):
+    """Gets the total number of records available in the API."""
+    url = f"{FEMA_API_URL}?$top=1&$inlinecount=allpages"
+    if filter_query:
+        url += f"&{filter_query}"
+
+    response = requests.get(url)
+    response.raise_for_status()
+    data = response.json()
+
+    return data.get("metadata", {}).get("count", 0)
+
+def fetch_all_records(filter_query=None):
+    """Fetches all disaster declarations in parallel using threads."""
+    total_records = get_total_records(filter_query)
+    print(f"Total records to fetch: {total_records}")
+
+    all_summaries = []
+    skip_values = list(range(0, total_records, BATCH_SIZE))
+    num_batches = len(skip_values)
+    results = [None] * num_batches  # Placeholder for fetched data
+
+    threads = []
+    for i, skip in enumerate(skip_values):
+        thread = threading.Thread(target=fetch_data, args=(skip, filter_query, results, i))
+        threads.append(thread)
+        thread.start()
+
+        # Limit active threads to MAX_THREADS
+        if len(threads) >= MAX_THREADS:
+            for t in threads:
+                t.join()  # Wait for the batch of threads to complete
+            threads = []
+
+    # Wait for any remaining threads to finish
+    for t in threads:
+        t.join()
+
+    # Merge results
+    for batch in results:
+        if batch:
+            all_summaries.extend(batch)
+
+    print(f"Total records fetched: {len(all_summaries)}")
+    return all_summaries
+
 # Get disaster summaries from the FEMA API
 @app.route("/api/disaster_summaries/", methods=["GET"])
 def get_disaster_summaries():
@@ -87,32 +149,10 @@ def get_disaster_summaries():
         filter_query = ""  # National dataset
         level = "National"
 
-    print(f"Fetching FEMA Data: {FEMA_API_URL} with filter: {filter_query}")
+    print(f"Fetching FEMA Data with filter: {filter_query}")
 
     try:
-        all_summaries = []
-        skip = 0
-        total_records = None
-
-        while total_records is None or skip < total_records:
-            url = f"{FEMA_API_URL}?$top={BATCH_SIZE}&$skip={skip}&$inlinecount=allpages"
-            if filter_query:
-                url += f"&{filter_query}"
-
-            print(f"Fetching {url}...")
-            response = requests.get(url)
-            response.raise_for_status()
-            data = response.json()
-
-            # Get total record count from metadata (first request only)
-            if total_records is None:
-                total_records = data.get("metadata", {}).get("count", 0)
-
-            # Add fetched records
-            all_summaries.extend(data.get("DisasterDeclarationsSummaries", []))
-            skip += BATCH_SIZE
-
-            print(f"Fetched {len(all_summaries)} / {total_records} records...")
+        all_summaries = fetch_all_records(filter_query)
 
         # Sort summaries by declaration date (most recent first)
         all_summaries.sort(
