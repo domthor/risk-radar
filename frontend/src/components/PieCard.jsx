@@ -4,17 +4,15 @@ import { useData } from "../hooks/useData";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-
 export const PieCard = ({ route }) => {
   const response = useData(route);
   const data = response.data;
-  
 
   const pieChartData = Object.entries(data.counts).map(
     ([type, count], index) => ({
       id: index,
       value: count,
-      label: `${type} (${count})`,
+      label: `${type}`,
     })
   );
 
@@ -53,12 +51,7 @@ export const PieCard = ({ route }) => {
         {data.level} {data.title}
       </h2>
       <div className="text-xl">Total: {data.total}</div>
-      <Stack
-        direction="row"
-        width="100%"
-        textAlign="center"
-        spacing={2}
-      >
+      <Stack direction="row" width="100%" textAlign="center" spacing={2}>
         <Box flexGrow={1}>
           <PieChart
             series={[
@@ -70,6 +63,9 @@ export const PieCard = ({ route }) => {
                     color: customColors[index % customColors.length], // Assign custom colors cyclically
                   })),
                 highlightScope: { fade: "global", highlight: "item" },
+                arcLabel: (params) => params.label ?? "",
+                arcLabelMinAngle: 20,
+                arcLabelRadius: 150,
               },
             ]}
             {...pieParams}
