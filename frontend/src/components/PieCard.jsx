@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import { PieChart } from "@mui/x-charts/PieChart"; // Import the PieChart component
-import { useHazardData } from "../hooks/useHazardData";
+import { PieChart } from "@mui/x-charts/PieChart";
+import { useData } from "../hooks/useData";
 import { useDrawingArea } from "@mui/x-charts/hooks";
 
-export const HazardCard = ({ selectedCounty, darkMode, title }) => {
-  const { data } = useHazardData(selectedCounty);
-  const { summaries, hazardCounts, oldestDate } = data;
+export const PieCard = ({ route, darkMode, selectedCounty }) => {
+  const response = useData(route);
+  const data = response.data;
+  
 
-  const pieChartData = Object.entries(hazardCounts).map(
+  const pieChartData = Object.entries(data.counts).map(
     ([type, count], index) => ({
       id: index,
       value: count,
@@ -79,9 +80,7 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
 
   return (
     <div className="bg-white dark:bg-dark rounded-md p-4 w-1/3 h-auto flex flex-col items-center">
-      <h2 className="text-2xl mb-4 font-semibold">
-        County Hazard Type Distribution ({oldestDate || "unknown"} - Present)
-      </h2>
+      <h2 className="text-2xl mb-4 font-semibold">{data.title}</h2>
       <div
         ref={chartWrapper}
         className="w-full h-auto"
@@ -90,10 +89,12 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
         <PieChart
           series={[
             {
-              data: pieChartData.sort((a, b) => b.value - a.value).map((item, index) => ({
-                ...item,
-                color: customColors[index % customColors.length], // Assign custom colors cyclically
-              })),
+              data: pieChartData
+                .sort((a, b) => b.value - a.value)
+                .map((item, index) => ({
+                  ...item,
+                  color: customColors[index % customColors.length], // Assign custom colors cyclically
+                })),
               innerRadius:
                 Math.min(chartDimensions.width, chartDimensions.height) * 0.36, // 25% of the smallest dimension
               outerRadius:
@@ -103,7 +104,6 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
           ]}
           height={chartDimensions.height}
           width={chartDimensions.width}
-          valueFormatter={(value) => `${value}`}
           slotProps={{
             legend: {
               labelStyle: { fill: darkMode ? "#d4d4d4" : "#171717" },
@@ -113,13 +113,12 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
           <PieCenterLabel>{selectedCounty.countyName}</PieCenterLabel>
         </PieChart>
       </div>
-
       {/* <h2 className="text-2xl mt-8">Disaster Details</h2>
       <div className="flex flex-col items-center w-full mt-4">
-        {summaries.map((disasterSummary) => (
+        {data.summaries.map((disasterSummary) => (
           <div
             key={disasterSummary.id}
-            className="border p-2 my-2 lg:w-2/5 text-start rounded-lg shadow-md text-sm"
+            className="border p-2 my-2 w-full text-start rounded-lg shadow-md text-sm"
           >
             <div>Declaration Date: {disasterSummary.declarationDate}</div>
             <div>Title: {disasterSummary.declarationTitle}</div>
@@ -131,3 +130,5 @@ export const HazardCard = ({ selectedCounty, darkMode, title }) => {
     </div>
   );
 };
+
+export default PieCard;

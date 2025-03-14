@@ -1,17 +1,22 @@
-import React, { useEffect, Suspense } from "react";
-import { HazardCard } from "../components/HazardCard";
-import { CrimeCard } from "../components/CrimeCard";
+import React, { useState, useEffect, Suspense } from "react";
+import { PieCard } from "../components/PieCard";
+import PieCardSkeleton from "../components/loading/PieCardSkeleton";
 import { useNavigate } from "react-router-dom";
-import HazardCardSkeleton from "../components/loading/HazardCardSkeleton";
 
 const Score = ({ selectedCounty, darkMode }) => {
   const navigate = useNavigate();
+  const [countyDisasterRoute, setCountyDisasterRoute] = useState(null);
 
   useEffect(() => {
     if (!selectedCounty) {
       navigate("/");
     }
+    else {
+      const hazard_route = `/api/disaster_summaries/?fipsStateCode=${selectedCounty.fipsStateCode}&fipsCountyCode=${selectedCounty.fipsCountyCode}`;
+      setCountyDisasterRoute(hazard_route);
+    }
   }, [selectedCounty, navigate]);
+
 
   if (!selectedCounty) return null; // Prevent rendering if already redirecting
 
@@ -20,20 +25,15 @@ const Score = ({ selectedCounty, darkMode }) => {
       <h1 className="text-4xl mt-12 font-bold">Score Page</h1>
 
       <div className="flex flex-row w-full items-center justify-center space-x-4">
-        <Suspense fallback={<HazardCardSkeleton />}>
-          <HazardCard selectedCounty={selectedCounty} darkMode={darkMode} />
-        </Suspense>
-        <Suspense fallback={<HazardCardSkeleton />}>
-          <CrimeCard selectedCounty={selectedCounty} darkMode={darkMode} />
-        </Suspense>
-      </div>
-      <div className="flex flex-row w-full items-center justify-center space-x-4">
-        <Suspense fallback={<HazardCardSkeleton />}>
-          <HazardCard selectedCounty={selectedCounty} darkMode={darkMode} />
-        </Suspense>
-        <Suspense fallback={<HazardCardSkeleton />}>
-          <CrimeCard selectedCounty={selectedCounty} darkMode={darkMode} />
-        </Suspense>
+        { countyDisasterRoute && (
+          <Suspense fallback={<PieCardSkeleton />}>
+            <PieCard
+              route={countyDisasterRoute}
+              darkMode={darkMode}
+              selectedCounty={selectedCounty}
+            />
+          </Suspense>
+        )}
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -65,11 +66,10 @@ def get_counties():
             "fipsCountyCode": county.countyfp,
         })
 
-    # time.sleep(3)
     return jsonify(results)
 
-# Get score for a county
-@app.route("/disaster_summaries/", methods=["GET"])
+# Get disaster summaries from the FEMA API
+@app.route("/api/disaster_summaries/", methods=["GET"])
 def get_disaster_summaries():
     
     # Get query parameters
@@ -77,23 +77,50 @@ def get_disaster_summaries():
     fips_county = request.args.get("fipsCountyCode")
     
     # Validate parameters
-    if not fips_state or not fips_county:
-        return jsonify({"error": "Both fipsStateCode and fipsCountyCode are required"}), 400
+    if fips_state and fips_county:
+        filter_query = f"?$filter=fipsStateCode eq '{fips_state}' and fipsCountyCode eq '{fips_county}'"
+    elif fips_state:
+        filter_query = f"?$filter=fipsStateCode eq '{fips_state}'"
+    else:
+        filter_query = ""
     
-    # Construct API filter query
-    filter_query = f"$filter=fipsStateCode eq '{fips_state}' and fipsCountyCode eq '{fips_county}'"
     
-    # Make request to FEMA API
-    response = requests.get(f"{FEMA_API_URL}?{filter_query}")
+    try:
+        response = requests.get(f"{FEMA_API_URL}{filter_query}")
+        response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
+        data = response.json()  # Ensure we parse JSON
+    except requests.RequestException as e:
+        return jsonify({"error": str(e)}), 500
 
-    # time.sleep(3)
+    # Extract and sort summaries
+    if not isinstance(data, dict):
+        return jsonify({"error": "Invalid response format from API"}), 500
+    summaries = data.get("DisasterDeclarationsSummaries", [])
+    summaries.sort(key=lambda s: datetime.strptime(s["declarationDate"], "%Y-%m-%dT%H:%M:%S.%fZ"), reverse=True)
     
-    # Check if request was successful
-    if response.status_code != 200:
-        return jsonify({"error": "Failed to fetch data from FEMA API"}), response.status_code
+    # Count hazard occurrences
+    counts = {}
+    for summary in summaries:
+        incident_type = summary.get("incidentType")
+        if incident_type:
+            counts[incident_type] = counts.get(incident_type, 0) + 1
+            
+    # Find the oldest disaster year
+    oldest_date = (
+        min(
+            (datetime.strptime(s["declarationDate"], "%Y-%m-%dT%H:%M:%S.%fZ") for s in summaries),
+            default=None,
+        )
+    )
+    oldest_year = oldest_date.year if oldest_date else None
     
-    # Return JSON response
-    return jsonify(response.json())
+    result = {
+        "summaries": summaries,
+        "counts": counts,
+        "oldestYear": oldest_year,
+        "title": f"Disaster Declarations Summaries Since {oldest_year}",
+    }
+    return result
         
 
 if __name__ == "__main__":
