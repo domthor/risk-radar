@@ -29,7 +29,7 @@ const Score = ({ selectedCounty, darkMode }) => {
       <h1 className="text-4xl mt-12 font-bold">{selectedCounty.countyName}</h1>
 
       <h2 className="text-2xl">Disaster Summaries</h2>
-      <div className="flex flex-row w-full justify-center space-x-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 w-full justify-center space-x-4">
         {countyDisasterRoute && (
           <Suspense fallback={<PieCardSkeleton />}>
             <PieCard

@@ -2,13 +2,18 @@ import { useEffect, useState, useRef } from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useData } from "../hooks/useData";
 import Box from "@mui/material/Box";
+import Legend from "./Legend";
+import { BiSolidUpArrow } from "react-icons/bi";
+import { BiSolidDownArrow } from "react-icons/bi";
 
 export const PieCard = ({ route }) => {
   const response = useData(route);
   const data = response.data;
 
-  const [chartHeight, setChartHeight] = useState(500);
+  const [chartHeight, setChartHeight] = useState(400);
   const chartWrapper = useRef(null);
+
+  const [legendShow, setLegendShow] = useState(true);
 
   // Set the chart height based on the width of the chart wrapper
   useEffect(() => {
@@ -59,7 +64,7 @@ export const PieCard = ({ route }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-dark rounded-md p-4 w-1/3 h-auto flex flex-col items-center">
+    <div className="bg-white dark:bg-dark rounded-md p-4 w-full flex flex-col items-center">
       <h2 className="text-2xl mb-4 font-semibold">
         {data.level} {data.title}
       </h2>
@@ -80,6 +85,17 @@ export const PieCard = ({ route }) => {
           {...pieParams}
         ></PieChart>
       </Box>
+      <button
+        className="mt-4 text-blue-500"
+        onClick={() => setLegendShow(!legendShow)}
+      >
+        <div className="flex flex-row items-center space-x-2">
+          <span className="text-md font-semibold">Legend</span>
+          {legendShow ? <BiSolidUpArrow /> : <BiSolidDownArrow />}
+        </div>
+      </button>
+      {legendShow && <Legend counts={data.counts} colors={customColors} />}
+
       {/* <h2 className="text-2xl mt-8">Disaster Details</h2>
       <div className="flex flex-col items-center w-full mt-4">
         {data.summaries.map((disasterSummary) => (

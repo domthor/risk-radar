@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { RxCross2 } from "react-icons/rx";
-import { BiSolidDownArrow } from "react-icons/bi";
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
 const Autocomplete = ({ options, setSelectedCounty }) => {
@@ -105,7 +105,7 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
 
         {/* Dropdown Arrow */}
         <button className="absolute right-2 " onClick={handleDropdown}>
-          <BiSolidDownArrow />
+          { isOpen ? <BiSolidUpArrow /> : <BiSolidDownArrow /> }
         </button>
       </div>
 
