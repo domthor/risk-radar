@@ -1,12 +1,25 @@
-import React from "react";
+import { useEffect, useState, useRef } from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useData } from "../hooks/useData";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 
 export const PieCard = ({ route }) => {
   const response = useData(route);
   const data = response.data;
+
+  const [chartHeight, setChartHeight] = useState(500);
+  const chartWrapper = useRef(null);
+
+  // Set the chart height based on the width of the chart wrapper
+  useEffect(() => {
+    const handleResize = () => {
+      setChartHeight(chartWrapper.current.offsetWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const pieChartData = Object.entries(data.counts).map(
     ([type, count], index) => ({
@@ -40,9 +53,9 @@ export const PieCard = ({ route }) => {
   ];
 
   const pieParams = {
-    height: 500,
-    margin: { right: 5 },
-    slotProps: { legend: { hidden: true } },
+    height: chartHeight, // Responsive height of the chart
+    margin: { right: 0 }, // Center the chart
+    slotProps: { legend: { hidden: true } }, // Hide the legend
   };
 
   return (
@@ -51,27 +64,22 @@ export const PieCard = ({ route }) => {
         {data.level} {data.title}
       </h2>
       <div className="text-xl">Total: {data.total}</div>
-      <Stack direction="row" width="100%" textAlign="center" spacing={2}>
-        <Box flexGrow={1}>
-          <PieChart
-            series={[
-              {
-                data: pieChartData
-                  .sort((a, b) => b.value - a.value)
-                  .map((item, index) => ({
-                    ...item,
-                    color: customColors[index % customColors.length], // Assign custom colors cyclically
-                  })),
-                highlightScope: { fade: "global", highlight: "item" },
-                arcLabel: (params) => params.label ?? "",
-                arcLabelMinAngle: 20,
-                arcLabelRadius: 150,
-              },
-            ]}
-            {...pieParams}
-          ></PieChart>
-        </Box>
-      </Stack>
+      <Box width="100%" ref={chartWrapper}>
+        <PieChart
+          series={[
+            {
+              data: pieChartData
+                .sort((a, b) => b.value - a.value)
+                .map((item, index) => ({
+                  ...item,
+                  color: customColors[index % customColors.length], // Assign custom colors cyclically
+                })),
+              highlightScope: { fade: "global", highlight: "item" },
+            },
+          ]}
+          {...pieParams}
+        ></PieChart>
+      </Box>
       {/* <h2 className="text-2xl mt-8">Disaster Details</h2>
       <div className="flex flex-col items-center w-full mt-4">
         {data.summaries.map((disasterSummary) => (
