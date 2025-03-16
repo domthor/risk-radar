@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { PieCard } from "../components/PieCard";
 import PieCardSkeleton from "../components/loading/PieCardSkeleton";
+import ScoreCard from "../components/ScoreCard";
 import { useNavigate } from "react-router-dom";
 
 const Score = ({ selectedCounty, darkMode }) => {
@@ -13,15 +14,17 @@ const Score = ({ selectedCounty, darkMode }) => {
   useEffect(() => {
     if (!selectedCounty) {
       navigate("/");
-    }
-    else {
+    } else {
       const base_disaster_route = `/api/disaster_summaries/`;
-      setCountyDisasterRoute(`${base_disaster_route}?fipsStateCode=${selectedCounty.fipsStateCode}&fipsCountyCode=${selectedCounty.fipsCountyCode}`);
-      setStateDisasterRoute(`${base_disaster_route}?fipsStateCode=${selectedCounty.fipsStateCode}`);
+      setCountyDisasterRoute(
+        `${base_disaster_route}?fipsStateCode=${selectedCounty.fipsStateCode}&fipsCountyCode=${selectedCounty.fipsCountyCode}`
+      );
+      setStateDisasterRoute(
+        `${base_disaster_route}?fipsStateCode=${selectedCounty.fipsStateCode}`
+      );
       setNationalDisasterRoute(`${base_disaster_route}`);
     }
   }, [selectedCounty, navigate]);
-
 
   if (!selectedCounty) return null; // Prevent rendering if already redirecting
 
@@ -65,7 +68,9 @@ const Score = ({ selectedCounty, darkMode }) => {
 
       {/* Overall Tab */}
       {activeTab === "overall" && (
-        <div className="">Overall</div>
+        <div className="">
+          <ScoreCard></ScoreCard>
+        </div>
       )}
 
       {/* Disaster Data Tab*/}
