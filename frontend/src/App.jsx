@@ -46,21 +46,11 @@ const App = () => {
         <Route path="/alerts" element={<Alerts />} />
         <Route
           path="/settings"
-          element={
-            <Settings
-              darkMode={darkMode}
-              setDarkMode={setDarkMode}
-            />
-          }
+          element={<Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
         />
         <Route
           path="/score"
-          element={
-            <Score
-              selectedCounty={selectedCounty}
-              darkMode={darkMode}
-            />
-          }
+          element={<Score selectedCounty={selectedCounty} />}
         />
       </Routes>
     </Router>

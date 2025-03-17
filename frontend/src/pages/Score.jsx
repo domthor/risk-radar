@@ -4,7 +4,7 @@ import PieCardSkeleton from "../components/loading/PieCardSkeleton";
 import ScoreCard from "../components/ScoreCard";
 import { useNavigate } from "react-router-dom";
 
-const Score = ({ selectedCounty, darkMode }) => {
+const Score = ({ selectedCounty }) => {
   const navigate = useNavigate();
   const [countyDisasterRoute, setCountyDisasterRoute] = useState(null);
   const [stateDisasterRoute, setStateDisasterRoute] = useState(null);
@@ -29,7 +29,7 @@ const Score = ({ selectedCounty, darkMode }) => {
   if (!selectedCounty) return null; // Prevent rendering if already redirecting
 
   return (
-    <div className="dark:bg-black dark:text-neutral-300 bg-light text-black p-8 flex flex-col items-center pt-32 min-h-screen space-y-4">
+    <div className="dark:bg-black dark:text-light bg-light text-dark p-8 flex flex-col items-center pt-32 min-h-screen space-y-4">
       <h1 className="text-4xl mt-12 font-bold">{selectedCounty.countyName}</h1>
 
       {/* Tab Buttons */}
@@ -38,7 +38,7 @@ const Score = ({ selectedCounty, darkMode }) => {
           className={`px-4 py-2 text-lg font-semibold ${
             activeTab === "overall"
               ? "border-b-2 border-blue-500 text-blue-600"
-              : "text-gray-500"
+              : "border-b-1 text-gray-500"
           }`}
           onClick={() => setActiveTab("overall")}
         >
@@ -48,17 +48,17 @@ const Score = ({ selectedCounty, darkMode }) => {
           className={`px-4 py-2 text-lg font-semibold ${
             activeTab === "disaster"
               ? "border-b-2 border-blue-500 text-blue-600"
-              : "text-gray-500"
+              : "border-b-1 text-gray-500"
           }`}
           onClick={() => setActiveTab("disaster")}
         >
           Disaster Data
         </button>
         <button
-          className={`ml-4 px-4 py-2 text-lg font-semibold ${
+          className={`px-4 py-2 text-lg font-semibold ${
             activeTab === "crime"
               ? "border-b-2 border-blue-500 text-blue-600"
-              : "text-gray-500"
+              : "border-b-1 text-gray-500"
           }`}
           onClick={() => setActiveTab("crime")}
         >
@@ -78,29 +78,17 @@ const Score = ({ selectedCounty, darkMode }) => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 w-full justify-center space-x-4">
           {countyDisasterRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <PieCard
-                route={countyDisasterRoute}
-                darkMode={darkMode}
-                selectedCounty={selectedCounty}
-              />
+              <PieCard route={countyDisasterRoute} />
             </Suspense>
           )}
           {stateDisasterRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <PieCard
-                route={stateDisasterRoute}
-                darkMode={darkMode}
-                selectedCounty={selectedCounty}
-              />
+              <PieCard route={stateDisasterRoute} />
             </Suspense>
           )}
           {nationalDisasterRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <PieCard
-                route={nationalDisasterRoute}
-                darkMode={darkMode}
-                selectedCounty={selectedCounty}
-              />
+              <PieCard route={nationalDisasterRoute} />
             </Suspense>
           )}
         </div>
@@ -111,20 +99,12 @@ const Score = ({ selectedCounty, darkMode }) => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 w-full justify-center space-x-4">
           {stateDisasterRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <PieCard
-                route={stateDisasterRoute}
-                darkMode={darkMode}
-                selectedCounty={selectedCounty}
-              />
+              <PieCard route={stateDisasterRoute} />
             </Suspense>
           )}
           {nationalDisasterRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <PieCard
-                route={nationalDisasterRoute}
-                darkMode={darkMode}
-                selectedCounty={selectedCounty}
-              />
+              <PieCard route={nationalDisasterRoute} />
             </Suspense>
           )}
         </div>
