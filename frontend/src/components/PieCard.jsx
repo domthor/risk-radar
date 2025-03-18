@@ -13,8 +13,6 @@ export const PieCard = ({ route }) => {
   const [chartHeight, setChartHeight] = useState(400);
   const chartWrapper = useRef(null);
 
-  const [legendShow, setLegendShow] = useState(true);
-
   // Set the chart height based on the width of the chart wrapper
   useEffect(() => {
     const handleResize = () => {
@@ -85,7 +83,7 @@ export const PieCard = ({ route }) => {
           {...pieParams}
         ></PieChart>
       </Box>
-      {legendShow && <Legend counts={data.counts} colors={customColors} />}
+      <Legend counts={data.counts} colors={customColors} />
     </div>
   );
 };

@@ -24,7 +24,7 @@ const Legend = ({ counts, colors }) => {
       ))}
       {sortedCounts.length > 6 && (
         <button
-          className="col-span-2 text-blue-500 mt-2"
+          className="col-span-2 text-blue-500 hover:text-blue-700 mt-2 mx-auto px-2"
           onClick={() => setShowAll(!showAll)}
         >
           {showAll ? "Show Less" : "Show More"}
