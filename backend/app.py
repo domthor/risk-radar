@@ -154,15 +154,21 @@ def get_disaster_summaries():
     try:
         all_summaries = fetch_all_records(filter_query)
 
+        filtered_summaries = [
+            summary
+            for summary in all_summaries
+            if summary.get("declarationTitle") not in ["COVID-19 PANDEMIC", "HURRICANE KATRINA EVACUATION", "COVID-19 "]
+        ]
+
         # Sort summaries by declaration date (most recent first)
-        all_summaries.sort(
+        filtered_summaries.sort(
             key=lambda s: datetime.strptime(s["declarationDate"], "%Y-%m-%dT%H:%M:%S.%fZ"),
             reverse=True
         )
 
         # Count hazard occurrences
         counts = {}
-        for summary in all_summaries:
+        for summary in filtered_summaries:
             incident_type = summary.get("incidentType")
             if incident_type:
                 counts[incident_type] = counts.get(incident_type, 0) + 1
@@ -170,19 +176,19 @@ def get_disaster_summaries():
         # Find the oldest disaster year
         oldest_date = (
             min(
-                (datetime.strptime(s["declarationDate"], "%Y-%m-%dT%H:%M:%S.%fZ") for s in all_summaries),
+                (datetime.strptime(s["declarationDate"], "%Y-%m-%dT%H:%M:%S.%fZ") for s in filtered_summaries),
                 default=None,
             )
         )
         oldest_year = oldest_date.year if oldest_date else None
 
         result = {
-            "summaries": all_summaries,
+            "summaries": filtered_summaries,
             "counts": counts,
             "oldestYear": oldest_year,
             "title": "Disaster Type Distribution",
             "level": level,
-            "total": len(all_summaries),
+            "total": len(filtered_summaries),
         }
 
         return jsonify(result)
