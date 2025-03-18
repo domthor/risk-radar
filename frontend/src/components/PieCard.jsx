@@ -8,7 +8,27 @@ import { BiSolidDownArrow } from "react-icons/bi";
 
 export const PieCard = ({ route }) => {
   const response = useData(route);
-  const data = response.data;
+
+  // Remove noise from data
+  const filteredSummaries = response.data.summaries.filter(
+    (summary) =>
+      summary.declarationTitle !== "COVID-19 PANDEMIC" &&
+      summary.declarationTitle !== "HURRICANE KATRINA EVACUATION" &&
+      summary.declarationTitle !== "COVID-19 "
+  );
+
+  // Recompute counts
+  const counts = filteredSummaries.reduce((acc, summary) => {
+    acc[summary.incidentType] = (acc[summary.incidentType] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Create the new filtered data object
+  const data = {
+    ...response.data,
+    summaries: filteredSummaries,
+    counts,
+  };
 
   const [chartHeight, setChartHeight] = useState(400);
   const chartWrapper = useRef(null);
@@ -68,7 +88,7 @@ export const PieCard = ({ route }) => {
       <h2 className="text-2xl mb-4 font-semibold">
         {data.level} {data.title}
       </h2>
-      <div className="text-xl">Total: {data.total}</div>
+      <div className="text-xl">Total: {filteredSummaries.length}</div>
       <Box width="100%" ref={chartWrapper}>
         <PieChart
           series={[
@@ -85,31 +105,7 @@ export const PieCard = ({ route }) => {
           {...pieParams}
         ></PieChart>
       </Box>
-      <button
-        className="mt-4 text-blue-500"
-        onClick={() => setLegendShow(!legendShow)}
-      >
-        <div className="flex flex-row items-center space-x-2">
-          <span className="text-md font-semibold">Legend</span>
-          {legendShow ? <BiSolidUpArrow /> : <BiSolidDownArrow />}
-        </div>
-      </button>
       {legendShow && <Legend counts={data.counts} colors={customColors} />}
-
-      {/* <h2 className="text-2xl mt-8">Disaster Details</h2>
-      <div className="flex flex-col items-center w-full mt-4">
-        {data.summaries.map((disasterSummary) => (
-          <div
-            key={disasterSummary.id}
-            className="border p-2 my-2 w-full text-start rounded-lg shadow-md text-sm"
-          >
-            <div>Declaration Date: {disasterSummary.declarationDate}</div>
-            <div>Title: {disasterSummary.declarationTitle}</div>
-            <div>Incident Type: {disasterSummary.incidentType}</div>
-            <div>Designated Area: {disasterSummary.designatedArea}</div>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 };
