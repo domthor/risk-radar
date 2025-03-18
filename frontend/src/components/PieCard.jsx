@@ -10,27 +10,6 @@ export const PieCard = ({ route }) => {
   const response = useData(route);
   const data = response.data;
 
-  // // Remove noise from data
-  // const filteredSummaries = response.data.summaries.filter(
-  //   (summary) =>
-  //     summary.declarationTitle !== "COVID-19 PANDEMIC" &&
-  //     summary.declarationTitle !== "HURRICANE KATRINA EVACUATION" &&
-  //     summary.declarationTitle !== "COVID-19 "
-  // );
-
-  // // Recompute counts
-  // const counts = filteredSummaries.reduce((acc, summary) => {
-  //   acc[summary.incidentType] = (acc[summary.incidentType] || 0) + 1;
-  //   return acc;
-  // }, {});
-
-  // // Create the new filtered data object
-  // const data = {
-  //   ...response.data,
-  //   summaries: filteredSummaries,
-  //   counts,
-  // };
-
   const [chartHeight, setChartHeight] = useState(400);
   const chartWrapper = useRef(null);
 
