@@ -5,6 +5,8 @@ import {
   GaugeReferenceArc,
   useGaugeState,
 } from "@mui/x-charts/Gauge";
+import { useData } from "../hooks/useData";
+
 
 function GaugePointer() {
   const { valueAngle, outerRadius, cx, cy } = useGaugeState();
@@ -30,9 +32,11 @@ function GaugePointer() {
   );
 }
 
-const ScoreCard = () => {
-  const score = 80; // Set your target value here
+const ScoreCard = ({ route }) => {
   const [animatedValue, setAnimatedValue] = useState(0);
+  const response = useData(route);
+  const data = response.data;
+  const score = data.score;
 
   useEffect(() => {
     let current = 0;

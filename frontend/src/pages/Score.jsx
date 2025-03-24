@@ -4,6 +4,7 @@ import PieCardSkeleton from "../components/loading/PieCardSkeleton";
 import ScoreCard from "../components/ScoreCard";
 import { useNavigate } from "react-router-dom";
 
+
 const Score = ({ selectedCounty }) => {
   const navigate = useNavigate();
   const [countyDisasterRoute, setCountyDisasterRoute] = useState(null);
@@ -67,9 +68,9 @@ const Score = ({ selectedCounty }) => {
       </div>
 
       {/* Overall Tab */}
-      {activeTab === "overall" && (
+      {activeTab === "overall" && countyDisasterRoute && (
         <div className="">
-          <ScoreCard></ScoreCard>
+          <ScoreCard route={countyDisasterRoute} />
         </div>
       )}
 

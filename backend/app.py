@@ -131,6 +131,16 @@ def fetch_all_records(filter_query=None):
     print(f"Total records fetched: {len(all_summaries)}")
     return all_summaries
 
+
+def calculate_score(count):
+    if count <= 0:
+        return 100
+    elif count >= 80:
+        return 1
+    else:
+        score = 100 - (min(100, max(0, (count / 80) * 100)))
+        return round(score)
+    
 # Get disaster summaries from the FEMA API
 @app.route("/api/disaster_summaries/", methods=["GET"])
 def get_disaster_summaries():
@@ -173,6 +183,9 @@ def get_disaster_summaries():
             if incident_type:
                 counts[incident_type] = counts.get(incident_type, 0) + 1
 
+        total_incident_count = sum(counts.values())
+        score = calculate_score(total_incident_count)
+
         # Find the oldest disaster year
         oldest_date = (
             min(
@@ -185,12 +198,12 @@ def get_disaster_summaries():
         result = {
             "summaries": filtered_summaries,
             "counts": counts,
+            "score": score,
             "oldestYear": oldest_year,
             "title": "Disaster Type Distribution",
             "level": level,
             "total": len(filtered_summaries),
         }
-
         return jsonify(result)
 
     except requests.RequestException as e:
