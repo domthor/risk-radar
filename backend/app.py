@@ -112,12 +112,13 @@ def get_crime_summaries():
 
         for future in as_completed(futures):
             actuals = future.result()
-            for agency, date_counts in actuals.items():
-                for date, count in date_counts.items():
-                    if count:
-                        for date_range in DATE_RANGES:
-                            if parse_date(date_range[0]) <= parse_date(date) <= parse_date(date_range[1]):
-                                date_range_counts[f"{date_range[0]} - {date_range[1]}"] += count
+            if actuals:
+                for agency, date_counts in actuals.items():
+                    for date, count in date_counts.items():
+                        if count:
+                            for date_range in DATE_RANGES:
+                                if parse_date(date_range[0]) <= parse_date(date) <= parse_date(date_range[1]):
+                                    date_range_counts[f"{date_range[0]} - {date_range[1]}"] += count
 
     # Extract counts and dynamic date range labels for xLabels
     counts = list(date_range_counts.values())
