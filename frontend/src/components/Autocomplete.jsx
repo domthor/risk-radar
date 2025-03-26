@@ -104,7 +104,7 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
         )}
 
         {/* Dropdown Arrow */}
-        <button className="absolute right-2 " onClick={handleDropdown}>
+        <button className="absolute right-2 cursor-pointer" onClick={handleDropdown}>
           { isOpen ? <BiSolidUpArrow /> : <BiSolidDownArrow /> }
         </button>
       </div>

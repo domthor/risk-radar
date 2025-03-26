@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Search from "./pages/Search";
 import About from "./pages/About";
-import Settings from "./pages/Settings";
+// import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
 import Alerts from "./pages/Alerts";
 import Score from "./pages/Score";
@@ -48,10 +48,10 @@ const App = () => {
           />
           <Route path="/about" element={<About />} />
           <Route path="/alerts" element={<Alerts />} />
-          <Route
+          {/* <Route
             path="/settings"
             element={<Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
-          />
+          /> */}
           <Route
             path="/score"
             element={<Score selectedCounty={selectedCounty} />}

@@ -4,8 +4,8 @@ import { Tooltip } from "react-tooltip";
 import { TbWorldSearch } from "react-icons/tb";
 import { FaCircleInfo } from "react-icons/fa6";
 import { FaBell } from "react-icons/fa6";
-import { IoSettingsSharp } from "react-icons/io5";
-import { MdLight, MdLightMode } from "react-icons/md";
+// import { IoSettingsSharp } from "react-icons/io5";
+import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 
 
@@ -53,7 +53,7 @@ const Navbar = ({darkMode, setDarkMode}) => {
           </Link>
         </li>
         <li
-          className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
+          className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200 cursor-pointer"
           data-tooltip-id="theme"
           data-tooltip-content="Theme"
           onClick={() => setDarkMode(!darkMode)}
@@ -64,7 +64,7 @@ const Navbar = ({darkMode, setDarkMode}) => {
             <MdDarkMode className="text-3xl"></MdDarkMode>
           )}
         </li>
-        <li
+        {/* <li
           className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
           data-tooltip-id="settings"
           data-tooltip-content="Settings"
@@ -72,13 +72,13 @@ const Navbar = ({darkMode, setDarkMode}) => {
           <Link to="/settings">
             <IoSettingsSharp className="text-3xl"></IoSettingsSharp>
           </Link>
-        </li>
+        </li> */}
       </ul>
       <Tooltip id="search" />
       <Tooltip id="about" />
       <Tooltip id="alerts" />
       <Tooltip id="theme" />
-      <Tooltip id="settings" />
+      {/* <Tooltip id="settings" /> */}
     </nav>
   );
 };

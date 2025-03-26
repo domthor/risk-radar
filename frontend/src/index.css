@@ -20,7 +20,3 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #555; /* Color of the thumb when hovered */
 }
-
-button {
-    cursor: pointer;
-}
