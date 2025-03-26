@@ -20,14 +20,19 @@ const BarCard = ({ route }) => {
     };
   }, []);
 
+  const formatLargeNumbers = (value) => {
+    if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(0)}M`; // 1M+
+    if (value >= 1_000) return `${(value / 1_000).toFixed(0)}K`; // 1K+
+    return value; // Less than 1K
+  };
+
   return (
     <div className="bg-white dark:bg-dark rounded-md p-4 w-full flex flex-col items-center">
-      <h2 className="text-2xl mb-4 font-semibold">
-        {data.level} {data.title}
-      </h2>
+      <h2 className="text-2xl mb-4 font-semibold">{data.title}</h2>
       <Box ref={chartWrapper} sx={{ width: "100%" }}>
         <BarChart
           height={chartHeight}
+          yAxis={[{ valueFormatter: formatLargeNumbers }]} // Format large numbers
           series={[
             {
               data: data.counts,

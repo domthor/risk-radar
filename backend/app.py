@@ -63,8 +63,15 @@ def get_ori(state_initials=None, county_name=None):
                 oris.extend([agency["ori"] for agency in agencies])
     return oris
 
-def fetch_crime_data(ori, date_range):
-    url = f"{FBI_API_BASE_URL}/summarized/agency/{ori}/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
+def fetch_crime_data(ori, date_range, county_name, state_initials):
+    if county_name:
+        url = f"{FBI_API_BASE_URL}/summarized/agency/{ori}/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
+    elif state_initials:
+        url = f"{FBI_API_BASE_URL}/summarized/state/{state_initials}/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
+        print(f"Fetching state data from {url}")
+    else:
+        url = f"{FBI_API_BASE_URL}/summarized/national/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
+        print(f"Fetching national data from {url}")
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -80,24 +87,34 @@ def get_crime_summaries():
     county_name = request.args.get("cleanedCountyName")
     state_initials = request.args.get("stateInitials")
 
-    oris = get_ori(state_initials, county_name)
-    print(f"ORI's: {oris}")
+    title = ""
+    if county_name:
+        title = "County Crime Counts"
+    elif state_initials:
+        title = "State Crime Counts"
+    else:
+        title = "National Crime Counts"
 
-    if not oris:
-        return jsonify({"error": "No ORI data found"}), 404
+    oris = []
+    if county_name:
+        oris = get_ori(state_initials, county_name)
+        # print(f"ORI's: {oris}")
 
     date_range_counts = {f"{date_range[0]} - {date_range[1]}": 0 for date_range in DATE_RANGES}  # Use tuple instead of list
 
     # Use ThreadPoolExecutor to fetch data concurrently
     with ThreadPoolExecutor() as executor:
-        futures = [executor.submit(fetch_crime_data, ori, date_range) for ori in oris for date_range in DATE_RANGES]
+        futures = [executor.submit(fetch_crime_data, ori, date_range, county_name, state_initials) for ori in oris for date_range in DATE_RANGES]
+
+        # If no ORI's are found, fetch data for the entire state or nation
+        if not oris:
+            futures.extend([executor.submit(fetch_crime_data, None, date_range, county_name, state_initials) for date_range in DATE_RANGES])
 
         for future in as_completed(futures):
             actuals = future.result()
             for agency, date_counts in actuals.items():
                 for date, count in date_counts.items():
-                    if count is not None:
-                        # Add the count for the corresponding date range
+                    if count:
                         for date_range in DATE_RANGES:
                             if parse_date(date_range[0]) <= parse_date(date) <= parse_date(date_range[1]):
                                 date_range_counts[f"{date_range[0]} - {date_range[1]}"] += count
@@ -109,6 +126,7 @@ def get_crime_summaries():
     result = {
         "counts": counts,
         "xLabels": xLabels,
+        "title": title,
     }
 
     return jsonify(result)

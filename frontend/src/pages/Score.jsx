@@ -12,6 +12,8 @@ const Score = ({ selectedCounty }) => {
   const [stateDisasterRoute, setStateDisasterRoute] = useState(null);
   const [nationalDisasterRoute, setNationalDisasterRoute] = useState(null);
   const [countyCrimeRoute, setCountyCrimeRoute] = useState(null);
+  const [stateCrimeRoute, setStateCrimeRoute] = useState(null);
+  const [nationalCrimeRoute, setNationalCrimeRoute] = useState(null);
   const [activeTab, setActiveTab] = useState("overall");
 
   useEffect(() => {
@@ -31,8 +33,8 @@ const Score = ({ selectedCounty }) => {
       setCountyCrimeRoute(
         `${base_crime_route}?stateInitials=${selectedCounty.stateInitials}&cleanedCountyName=${selectedCounty.cleanedCountyName}`
       );
-      
-
+      setStateCrimeRoute(`${base_crime_route}?stateInitials=${selectedCounty.stateInitials}`);
+      setNationalCrimeRoute(`${base_crime_route}`);
     }
   }, [selectedCounty, navigate]);
 
@@ -114,12 +116,12 @@ const Score = ({ selectedCounty }) => {
           )}
           {countyCrimeRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <BarCard route={countyCrimeRoute} />
+              <BarCard route={stateCrimeRoute} />
             </Suspense>
           )}
           {countyCrimeRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <BarCard route={countyCrimeRoute} />
+              <BarCard route={nationalCrimeRoute} />
             </Suspense>
           )}
         </div>
