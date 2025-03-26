@@ -4,7 +4,7 @@ export const useCounties = () => {
   return useQuery({
     queryKey: ["counties"],
     queryFn: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/counties/`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/counties/`);
       if (!response.ok) throw new Error("Failed to fetch counties");
       return response.json();
     },

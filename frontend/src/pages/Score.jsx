@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { PieCard } from "../components/PieCard";
 import PieCardSkeleton from "../components/loading/PieCardSkeleton";
 import ScoreCard from "../components/ScoreCard";
+import BarCard from "../components/BarCard";
 import { useNavigate } from "react-router-dom";
 
 
@@ -10,6 +11,7 @@ const Score = ({ selectedCounty }) => {
   const [countyDisasterRoute, setCountyDisasterRoute] = useState(null);
   const [stateDisasterRoute, setStateDisasterRoute] = useState(null);
   const [nationalDisasterRoute, setNationalDisasterRoute] = useState(null);
+  const [countyCrimeRoute, setCountyCrimeRoute] = useState(null);
   const [activeTab, setActiveTab] = useState("overall");
 
   useEffect(() => {
@@ -24,6 +26,13 @@ const Score = ({ selectedCounty }) => {
         `${base_disaster_route}?fipsStateCode=${selectedCounty.fipsStateCode}`
       );
       setNationalDisasterRoute(`${base_disaster_route}`);
+
+      const base_crime_route = `/api/crime_summaries/`;
+      setCountyCrimeRoute(
+        `${base_crime_route}?stateInitials=${selectedCounty.stateInitials}&cleanedCountyName=${selectedCounty.cleanedCountyName}`
+      );
+      
+
     }
   }, [selectedCounty, navigate]);
 
@@ -97,15 +106,20 @@ const Score = ({ selectedCounty }) => {
 
       {/* Crime Data Tab */}
       {activeTab === "crime" && (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 w-full justify-center space-x-4">
-          {stateDisasterRoute && (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 w-full justify-center space-x-4">
+          {countyCrimeRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <PieCard route={stateDisasterRoute} />
+              <BarCard route={countyCrimeRoute} />
             </Suspense>
           )}
-          {nationalDisasterRoute && (
+          {countyCrimeRoute && (
             <Suspense fallback={<PieCardSkeleton />}>
-              <PieCard route={nationalDisasterRoute} />
+              <BarCard route={countyCrimeRoute} />
+            </Suspense>
+          )}
+          {countyCrimeRoute && (
+            <Suspense fallback={<PieCardSkeleton />}>
+              <BarCard route={countyCrimeRoute} />
             </Suspense>
           )}
         </div>

@@ -16,7 +16,7 @@ export const PieCard = ({ route }) => {
   // Set the chart height based on the width of the chart wrapper
   useEffect(() => {
     const handleResize = () => {
-      setChartHeight(chartWrapper.current.offsetWidth);
+      setChartHeight(Math.min(chartWrapper.current.offsetWidth, 400));
     };
     window.addEventListener("resize", handleResize);
     return () => {

@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch';
 const Settings = ({ darkMode, setDarkMode }) => {
   const fetchAndSetCounties = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/set_counties/`);
+      await fetch(`${import.meta.env.VITE_API_URL}/api/set_counties/`);
       alert("Counties have been set!");
     } catch (error) {
       console.error("There was an error fetching the counties!", error);
