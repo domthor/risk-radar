@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { PieCard } from "../components/PieCard";
 import PieCardSkeleton from "../components/loading/PieCardSkeleton";
+import BarCardSkeleton from "../components/loading/BarCardSkeleton";
 import ScoreCard from "../components/ScoreCard";
 import BarCard from "../components/BarCard";
 import { useNavigate } from "react-router-dom";
@@ -110,17 +111,17 @@ const Score = ({ selectedCounty }) => {
       {activeTab === "crime" && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 w-full justify-center space-x-4">
           {countyCrimeRoute && (
-            <Suspense fallback={<PieCardSkeleton />}>
+            <Suspense fallback={<BarCardSkeleton />}>
               <BarCard route={countyCrimeRoute} />
             </Suspense>
           )}
           {countyCrimeRoute && (
-            <Suspense fallback={<PieCardSkeleton />}>
+            <Suspense fallback={<BarCardSkeleton />}>
               <BarCard route={stateCrimeRoute} />
             </Suspense>
           )}
           {countyCrimeRoute && (
-            <Suspense fallback={<PieCardSkeleton />}>
+            <Suspense fallback={<BarCardSkeleton />}>
               <BarCard route={nationalCrimeRoute} />
             </Suspense>
           )}
