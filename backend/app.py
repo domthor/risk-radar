@@ -113,30 +113,6 @@ def get_crime_summaries():
 
     return jsonify(result)
 
-# # Get crime summaries from FBI API
-# @app.route("/api/crime_summaries/", methods=["GET"])
-# def get_crime_summaries():
-    county_name = request.args.get("cleanedCountyName")
-    state_initials = request.args.get("stateInitials")
-    oris = get_ori(state_initials, county_name)
-    print(f"ORI's: {oris}")
-    if not oris:
-        return jsonify({"error": "No ORI data found"}), 404
-    
-    total_count = 0
-    for ori in oris: 
-        for date_range in DATE_RANGES:
-            url = f"{FBI_API_BASE_URL}/summarized/agency/{ori}/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
-            # print(f"Fetching crime data from {url}")
-            response = requests.get(url)
-            data = response.json()
-            actuals = data['offenses']['actuals']
-            for agency, date_counts in actuals.items():
-                for date, count in date_counts.items():
-                    total_count += count
-                
-    return jsonify(total_count)
-
 # Fetch county data from the Census Bureau's national file
 @app.route("/api/set_counties/", methods=["GET"])
 def set_counties():

@@ -25,11 +25,15 @@ const BarCard = ({ route }) => {
       <h2 className="text-2xl mb-4 font-semibold">
         {data.level} {data.title}
       </h2>
-      <Box width="100%" ref={chartWrapper}>
+      <Box ref={chartWrapper} sx={{ width: "100%" }}>
         <BarChart
           height={chartHeight}
           series={[
-            { data: data.counts, label: "Violent Crime", id: "violentCrime" },
+            {
+              data: data.counts,
+              label: "Violent Crime",
+              id: "violentCrime",
+            },
           ]}
           xAxis={[{ data: data.xLabels, scaleType: "band" }]}
         />
