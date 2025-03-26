@@ -5,8 +5,9 @@ import { TbWorldSearch } from "react-icons/tb";
 import { FaCircleInfo } from "react-icons/fa6";
 import { FaBell } from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
-import { IoInvertMode } from "react-icons/io5";
-import { IoInvertModeOutline } from "react-icons/io5";
+import { MdLight, MdLightMode } from "react-icons/md";
+import { MdDarkMode } from "react-icons/md";
+
 
 import "react-tooltip/dist/react-tooltip.css";
 
@@ -58,9 +59,9 @@ const Navbar = ({darkMode, setDarkMode}) => {
           onClick={() => setDarkMode(!darkMode)}
         >
           {darkMode ? (
-            <IoInvertMode className="text-3xl"></IoInvertMode>
+            <MdLightMode className="text-3xl"></MdLightMode>
           ) : (
-            <IoInvertModeOutline className="text-3xl"></IoInvertModeOutline>
+            <MdDarkMode className="text-3xl"></MdDarkMode>
           )}
         </li>
         <li
