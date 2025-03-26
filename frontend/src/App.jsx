@@ -31,7 +31,7 @@ const App = () => {
   return (
     <ThemeProvider theme={newTheme}>
       <Router>
-        <Navbar />
+        <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
         {/* Define your routes */}
         <Routes>
@@ -54,9 +54,7 @@ const App = () => {
           />
           <Route
             path="/score"
-            element={
-              <Score selectedCounty={selectedCounty} />
-            }
+            element={<Score selectedCounty={selectedCounty} />}
           />
         </Routes>
       </Router>
