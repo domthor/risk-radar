@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "frontend",
+      "root": "frontend"
+    },
+    {
+      "name": "backend",
+      "root": "backend"
+    }
+  ]
+}
