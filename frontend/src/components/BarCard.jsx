@@ -1,11 +1,11 @@
 import { useData } from "../hooks/useData";
 import { BarChart } from "@mui/x-charts/BarChart";
-import Box from "@mui/material/Box";
 import { useEffect, useState, useRef } from "react";
 
 const BarCard = ({ route }) => {
   const response = useData(route);
   const data = response.data;
+  
   const [chartHeight, setChartHeight] = useState(400);
   const chartWrapper = useRef(null);
 
@@ -28,8 +28,8 @@ const BarCard = ({ route }) => {
 
   return (
     <div className="bg-white dark:bg-dark rounded-md p-4 w-full flex flex-col items-center">
-      <h2 className="text-2xl mb-4 font-semibold">{data.title}</h2>
-      <Box ref={chartWrapper} sx={{ width: "100%" }}>
+      <h2 className="text-xl font-semibold">{data.title}</h2>
+      <div ref={chartWrapper} className="flex w-full">
         <BarChart
           height={chartHeight}
           yAxis={[{ valueFormatter: formatLargeNumbers }]} // Format large numbers
@@ -42,7 +42,7 @@ const BarCard = ({ route }) => {
           ]}
           xAxis={[{ data: data.xLabels, scaleType: "band" }]}
         />
-      </Box>
+      </div>
     </div>
   );
 };

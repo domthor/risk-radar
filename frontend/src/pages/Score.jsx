@@ -42,13 +42,13 @@ const Score = ({ selectedCounty }) => {
   if (!selectedCounty) return null; // Prevent rendering if already redirecting
 
   return (
-    <div className="dark:bg-black dark:text-light bg-light text-dark p-8 flex flex-col items-center pt-32 min-h-screen space-y-4">
+    <div className="dark:bg-black dark:text-light bg-light text-dark p-8 flex flex-col items-center pt-18 min-h-screen space-y-4">
       <h1 className="text-4xl mt-12 font-bold">{selectedCounty.countyName}</h1>
 
       {/* Tab Buttons */}
-      <div className="flex border-b border-gray-300">
+      <div className="flex border-b border-gray-300 text-md">
         <button
-          className={`px-4 py-2 text-lg font-semibold ${
+          className={`px-4 py-2 font-semibold ${
             activeTab === "overall"
               ? "border-b-2 border-blue-500 text-blue-600"
               : "border-b-1 text-gray-500"
@@ -58,7 +58,7 @@ const Score = ({ selectedCounty }) => {
           Overall
         </button>
         <button
-          className={`px-4 py-2 text-lg font-semibold ${
+          className={`px-4 py-2 font-semibold ${
             activeTab === "disaster"
               ? "border-b-2 border-blue-500 text-blue-600"
               : "border-b-1 text-gray-500"
@@ -68,7 +68,7 @@ const Score = ({ selectedCounty }) => {
           Disaster Data
         </button>
         <button
-          className={`px-4 py-2 text-lg font-semibold ${
+          className={`px-4 py-2 font-semibold ${
             activeTab === "crime"
               ? "border-b-2 border-blue-500 text-blue-600"
               : "border-b-1 text-gray-500"
@@ -81,7 +81,7 @@ const Score = ({ selectedCounty }) => {
 
       {/* Overall Tab */}
       {activeTab === "overall" && countyDisasterRoute && (
-        <div className="">
+        <div className="flex w-full justify-center">
           <ScoreCard route={countyDisasterRoute} />
         </div>
       )}
