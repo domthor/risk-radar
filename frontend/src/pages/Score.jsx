@@ -46,9 +46,9 @@ const Score = ({ selectedCounty }) => {
       <h1 className="text-4xl mt-12 font-bold">{selectedCounty.countyName}</h1>
 
       {/* Tab Buttons */}
-      <div className="flex border-b border-gray-300">
+      <div className="flex border-b border-gray-300 ">
         <button
-          className={`px-4 py-2 text-lg font-semibold ${
+          className={`cursor-pointer px-4 py-2 text-lg font-semibold ${
             activeTab === "overall"
               ? "border-b-2 border-blue-500 text-blue-600"
               : "border-b-1 text-gray-500"
@@ -58,7 +58,7 @@ const Score = ({ selectedCounty }) => {
           Overall
         </button>
         <button
-          className={`px-4 py-2 text-lg font-semibold ${
+          className={`cursor-pointer px-4 py-2 text-lg font-semibold ${
             activeTab === "disaster"
               ? "border-b-2 border-blue-500 text-blue-600"
               : "border-b-1 text-gray-500"
@@ -68,7 +68,7 @@ const Score = ({ selectedCounty }) => {
           Disaster Data
         </button>
         <button
-          className={`px-4 py-2 text-lg font-semibold ${
+          className={`cursor-pointer px-4 py-2 text-lg font-semibold ${
             activeTab === "crime"
               ? "border-b-2 border-blue-500 text-blue-600"
               : "border-b-1 text-gray-500"
