@@ -44,7 +44,6 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
     setInputValue(option.countyName);
     setSelectedCounty(option);
     setIsOpen(false);
-    navigate("/score/");
   };
 
   // Handle clear input value
