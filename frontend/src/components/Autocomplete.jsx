@@ -3,7 +3,7 @@ import { RxCross2 } from "react-icons/rx";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 
-const Autocomplete = ({ options, setSelectedCounty }) => {
+const Autocomplete = ({ options, setSelectedCounty, navRoute }) => {
   const navigate = useNavigate();
   const inputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
@@ -44,6 +44,10 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
     setInputValue(option.countyName);
     setSelectedCounty(option);
     setIsOpen(false);
+    if (navRoute) {
+      // If a navRoute is provided, navigate to that route with the selected option
+      navigate(navRoute); // Navigate to the specified route
+    }
   };
 
   // Handle clear input value
@@ -103,8 +107,11 @@ const Autocomplete = ({ options, setSelectedCounty }) => {
         )}
 
         {/* Dropdown Arrow */}
-        <button className="absolute right-2 cursor-pointer" onClick={handleDropdown}>
-          { isOpen ? <BiSolidUpArrow /> : <BiSolidDownArrow /> }
+        <button
+          className="absolute right-2 cursor-pointer"
+          onClick={handleDropdown}
+        >
+          {isOpen ? <BiSolidUpArrow /> : <BiSolidDownArrow />}
         </button>
       </div>
 

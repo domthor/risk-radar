@@ -21,6 +21,7 @@ const Search = ({ selectedCounty, setSelectedCounty }) => {
           value={selectedCounty}
           onChange={handleSelect}
           setSelectedCounty={setSelectedCounty}
+          navRoute={"/score/"}
         />
       </div>
     </div>
