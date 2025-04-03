@@ -9,6 +9,7 @@ import time
 import threading
 import re
 from datetime import datetime
+import xml.etree.ElementTree as ET
 
 app = Flask(__name__)
 CORS(app) 
@@ -21,6 +22,7 @@ db = SQLAlchemy(app)
 FBI_API_KEY = os.getenv('FBI_API_KEY')
 FEMA_API_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries"
 CENSUS_API_URL = "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt"
+NOAA_API_URL = "https://api.weather.gov/alerts/active.atom"
 FBI_API_BASE_URL = "https://api.usa.gov/crime/fbi/cde"
 BATCH_SIZE = 10000  # Max records per request
 MAX_THREADS = 10  # Tune based on API rate limits and system capacity
@@ -68,10 +70,10 @@ def fetch_crime_data(ori, date_range, county_name, state_initials):
         url = f"{FBI_API_BASE_URL}/summarized/agency/{ori}/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
     elif state_initials:
         url = f"{FBI_API_BASE_URL}/summarized/state/{state_initials}/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
-        print(f"Fetching state data from {url}")
+        # print(f"Fetching state data from {url}")
     else:
         url = f"{FBI_API_BASE_URL}/summarized/national/V?from={date_range[0]}&to={date_range[1]}&API_KEY={FBI_API_KEY}"
-        print(f"Fetching national data from {url}")
+        # print(f"Fetching national data from {url}")
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -142,7 +144,7 @@ def set_counties():
     data = response.text.splitlines()
     data = data[1:]
     if data is not None:
-        print("Clearing duplicate county data.")
+        # print("Clearing duplicate county data.")
         db.session.query(County).delete()
         db.session.commit()
     
@@ -157,7 +159,7 @@ def set_counties():
         )
         db.session.add(county)
     
-    print("Adding counties to the database")
+    # print("Adding counties to the database")
     db.session.commit()
     return jsonify({"message": "Counties added to the database"})
     
@@ -193,13 +195,13 @@ def fetch_disaster_data(skip, filter_query, results, index):
     if filter_query:
         url += f"&{filter_query}"
 
-    print(f"Fetching {url}...")
+    # print(f"Fetching {url}...")
     response = requests.get(url)
     response.raise_for_status()
     data = response.json()
 
     results[index] = data.get("DisasterDeclarationsSummaries", [])
-    print(f"Fetched {len(results[index])} records from skip={skip}")
+    # print(f"Fetched {len(results[index])} records from skip={skip}")
 
 def get_total_disaster_records(filter_query=None):
     """Gets the total number of records available in the API."""
@@ -216,7 +218,7 @@ def get_total_disaster_records(filter_query=None):
 def fetch_all_disaster_records(filter_query=None):
     """Fetches all disaster declarations in parallel using threads."""
     total_records = get_total_disaster_records(filter_query)
-    print(f"Total records to fetch: {total_records}")
+    # print(f"Total records to fetch: {total_records}")
 
     all_summaries = []
     skip_values = list(range(0, total_records, BATCH_SIZE))
@@ -244,7 +246,7 @@ def fetch_all_disaster_records(filter_query=None):
         if batch:
             all_summaries.extend(batch)
 
-    print(f"Total records fetched: {len(all_summaries)}")
+    # print(f"Total records fetched: {len(all_summaries)}")
     return all_summaries
 
 def calculate_score(count):
@@ -274,7 +276,7 @@ def get_disaster_summaries():
         filter_query = ""  # National dataset
         level = "National"
 
-    print(f"Fetching FEMA Data with filter: {filter_query}")
+    # print(f"Fetching FEMA Data with filter: {filter_query}")
 
     try:
         all_summaries = fetch_all_disaster_records(filter_query)
@@ -323,7 +325,75 @@ def get_disaster_summaries():
 
     except requests.RequestException as e:
         return jsonify({"error": str(e)}), 500
-        
+    
+# Get alerts from NOAA
+@app.route("/api/alerts/", methods=["GET"])
+def get_alerts():
+    time.sleep(4)
+    # Get query parameters
+    zone = request.args.get("zone")
+
+    url = f"{NOAA_API_URL}?zone={zone}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        xml_content = response.text
+    except requests.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+    # Parse the XML content
+    parsed_alerts = parse_alerts(xml_content)
+
+    return jsonify(parsed_alerts)
+
+
+# Define the namespaces. You MUST provide a prefix for the default namespace
+# for use with find/findall. 'atom' is a common choice.
+namespaces = {
+    'atom': 'http://www.w3.org/2005/Atom',
+    'cap': 'urn:oasis:names:tc:emergency:cap:1.2'
+}
+
+datetime_format = "%m/%d/%Y %I:%M %p"
+
+def parse_alerts(xml_content):
+    alerts = []
+    try:
+        root = ET.fromstring(xml_content)
+        # Find all entry elements using the namespace map
+        entries = root.findall('atom:entry', namespaces)
+
+        for entry in entries:
+            alert_data = {}
+
+            # --- Helper function to safely get text ---
+            def get_text(element_name, namespace_key):
+                element = entry.find(f"{namespace_key}:{element_name}", namespaces)
+                return element.text.strip() if element is not None and element.text else None
+            
+            # --- Extract CAP elements ---
+            alert_data['capEvent'] = get_text('event', 'cap')
+            alert_data['capEffective'] = (datetime.fromisoformat(get_text('effective', 'cap'))).strftime(datetime_format)
+            alert_data['capExpires'] = (datetime.fromisoformat(get_text('expires', 'cap'))).strftime(datetime_format)
+            alert_data['capUrgency'] = get_text('urgency', 'cap')
+            alert_data['capSeverity'] = get_text('severity', 'cap')
+            alert_data['capCertainty'] = get_text('certainty', 'cap')
+            alert_data['capAreaDesc'] = get_text('areaDesc', 'cap')
+
+            alerts.append(alert_data)
+
+    except ET.ParseError as e:
+        print(f"Error parsing XML: {e}")
+        return None # Indicate failure
+    except Exception as e:
+        print(f"An unexpected error occurred during parsing: {e}")
+        return None
+
+    print("Alerts:", alerts)
+    return alerts
+
+
 
 if __name__ == "__main__":
     with app.app_context():

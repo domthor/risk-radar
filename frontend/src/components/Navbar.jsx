@@ -1,17 +1,19 @@
-import React from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import { TbWorldSearch } from "react-icons/tb";
 import { FaCircleInfo } from "react-icons/fa6";
 import { FaBell } from "react-icons/fa6";
-// import { IoSettingsSharp } from "react-icons/io5";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
-
+import { LuGauge } from "react-icons/lu";
+import { CountiesContext } from "../providers/CountiesProvider";
 
 import "react-tooltip/dist/react-tooltip.css";
 
-const Navbar = ({darkMode, setDarkMode}) => {
+const Navbar = ({ darkMode, setDarkMode }) => {
+  const { selectedCounty } = useContext(CountiesContext);
+
   return (
     <nav className="fixed top-0 left-0 w-full bg-light dark:bg-black py-6 px-8 shadow-md shadow-gray-400 dark:shadow-gray-800 z-50 flex items-center justify-between">
       <div className="pl-8 flex items-center">
@@ -25,6 +27,28 @@ const Navbar = ({darkMode, setDarkMode}) => {
 
       {/* Navigation Links */}
       <ul className="hidden md:flex gap-16 text-neutral-300 text-lg pr-8">
+        {selectedCounty && (
+          <>
+            <li
+              className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
+              data-tooltip-id="score"
+              data-tooltip-content="Score"
+            >
+              <Link to="/score">
+                <LuGauge className="text-3xl"></LuGauge>
+              </Link>
+            </li>
+            <li
+              className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
+              data-tooltip-id="alerts"
+              data-tooltip-content="Alerts"
+            >
+              <Link to="/alerts">
+                <FaBell className="text-3xl"></FaBell>
+              </Link>
+            </li>
+          </>
+        )}
         <li
           className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
           data-tooltip-id="search"
@@ -34,15 +58,7 @@ const Navbar = ({darkMode, setDarkMode}) => {
             <TbWorldSearch className="text-3xl"></TbWorldSearch>
           </Link>
         </li>
-        <li
-          className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
-          data-tooltip-id="alerts"
-          data-tooltip-content="Alerts"
-        >
-          <Link to="/alerts">
-            <FaBell className="text-3xl"></FaBell>
-          </Link>
-        </li>
+
         <li
           className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
           data-tooltip-id="about"
@@ -64,21 +80,12 @@ const Navbar = ({darkMode, setDarkMode}) => {
             <MdDarkMode className="text-3xl"></MdDarkMode>
           )}
         </li>
-        {/* <li
-          className="text-dark dark:text-light hover:text-black dark:hover:text-white transition duration-200"
-          data-tooltip-id="settings"
-          data-tooltip-content="Settings"
-        >
-          <Link to="/settings">
-            <IoSettingsSharp className="text-3xl"></IoSettingsSharp>
-          </Link>
-        </li> */}
       </ul>
       <Tooltip id="search" />
       <Tooltip id="about" />
       <Tooltip id="alerts" />
       <Tooltip id="theme" />
-      {/* <Tooltip id="settings" /> */}
+      <Tooltip id="score" />
     </nav>
   );
 };
